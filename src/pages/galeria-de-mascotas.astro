@@ -95,7 +95,7 @@ const heroImage = images[0]?.src ?? mediaUrl(content, "clinica-veterinaria-jara-
     </form>
     <div class="image-modal-inner">
       <p id="gallery-modal-title" class="sr-only">Imagen ampliada de la galería</p>
-      <img data-gallery-modal-image src={heroImage} alt="" width="1200" height="900" />
+      <img data-gallery-modal-image src={heroImage} alt="" />
       <p data-gallery-modal-caption></p>
     </div>
   </dialog>
@@ -106,17 +106,68 @@ const heroImage = images[0]?.src ?? mediaUrl(content, "clinica-veterinaria-jara-
   const galleryModal = document.querySelector<HTMLDialogElement>("[data-gallery-modal]");
   const galleryModalImage = galleryModal?.querySelector<HTMLImageElement>("[data-gallery-modal-image]");
   const galleryModalCaption = galleryModal?.querySelector<HTMLElement>("[data-gallery-modal-caption]");
-  const galleryTriggers = document.querySelectorAll<HTMLButtonElement>("[data-gallery-lightbox-source]");
+  const galleryTriggers = [
+    ...document.querySelectorAll<HTMLButtonElement>("[data-gallery-lightbox-source]"),
+  ];
 
   if (galleryModal && galleryModalImage && galleryModalCaption) {
     const galleryModalDefaultSrc = galleryModalImage.src;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    // Un único nombre compartido: en cada momento lo lleva la miniatura
+    // pinchada o la imagen del modal, nunca las dos a la vez. El navegador
+    // interpola tamaño y posición entre quien lo tenía antes y quien lo
+    // tiene después — así la miniatura crece hasta ocupar el modal en vez
+    // de que el modal aparezca aparte.
+    const MORPH_NAME = "gallery-lightbox";
+    let activeThumb: HTMLImageElement | null = null;
 
-    const openGalleryImage = (trigger: HTMLButtonElement) => {
+    const canMorph = () =>
+      typeof document.startViewTransition === "function" && !reduceMotion.matches;
+
+    const fillModal = (trigger: HTMLButtonElement) => {
       galleryModalImage.src = trigger.dataset.galleryLightboxSource ?? "";
       galleryModalImage.alt = trigger.dataset.galleryLightboxAlt ?? "Imagen ampliada de la galería";
       galleryModalCaption.textContent = trigger.dataset.galleryLightboxCaption ?? "Galería de mascotas";
-      if (typeof galleryModal.showModal === "function") galleryModal.showModal();
-      else galleryModal.setAttribute("open", "");
+    };
+
+    const openGalleryImage = (trigger: HTMLButtonElement) => {
+      const thumb = trigger.querySelector<HTMLImageElement>("img");
+      const show = () => {
+        if (typeof galleryModal.showModal === "function") galleryModal.showModal();
+        else galleryModal.setAttribute("open", "");
+      };
+
+      if (!thumb || !canMorph()) {
+        fillModal(trigger);
+        show();
+        return;
+      }
+
+      activeThumb = thumb;
+      thumb.style.viewTransitionName = MORPH_NAME;
+      document.startViewTransition(() => {
+        thumb.style.viewTransitionName = "";
+        fillModal(trigger);
+        galleryModalImage.style.viewTransitionName = MORPH_NAME;
+        show();
+      });
+    };
+
+    const closeGalleryImage = () => {
+      if (!activeThumb || !canMorph() || !galleryModal.open) {
+        galleryModal.close();
+        return;
+      }
+
+      const thumb = activeThumb;
+      galleryModalImage.style.viewTransitionName = MORPH_NAME;
+      document.startViewTransition(() => {
+        galleryModalImage.style.viewTransitionName = "";
+        galleryModal.close();
+        thumb.style.viewTransitionName = MORPH_NAME;
+      }).finished.finally(() => {
+        thumb.style.viewTransitionName = "";
+      });
     };
 
     galleryTriggers.forEach((trigger) => {
@@ -124,7 +175,12 @@ const heroImage = images[0]?.src ?? mediaUrl(content, "clinica-veterinaria-jara-
     });
 
     galleryModal.addEventListener("click", (event) => {
-      if (event.target === galleryModal) galleryModal.close();
+      if (event.target === galleryModal) closeGalleryImage();
+    });
+
+    galleryModal.querySelector("form")?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      closeGalleryImage();
     });
 
     galleryModal.addEventListener("close", () => {

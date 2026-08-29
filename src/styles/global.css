@@ -1213,18 +1213,20 @@ h3 {
 
 .image-modal::backdrop {
   background: rgba(16, 15, 15, 0.86);
+  /* El desenfoque no se anima: es la parte más cara de un `backdrop-filter`
+     en tirones/GPU, y es lo que hacía que el fundido se notara brusco
+     aunque la transición existiera. El fundido de opacidad ya transmite la
+     llegada del material sin ese coste. */
   backdrop-filter: blur(10px);
 }
 
-/* El material llega: escala y desenfoque a la vez, no un fundido plano. */
 .image-modal,
 .image-modal::backdrop {
   transition:
-    opacity 260ms var(--ease-out),
-    transform 260ms var(--ease-out),
-    backdrop-filter 260ms var(--ease-out),
-    overlay 260ms allow-discrete,
-    display 260ms allow-discrete;
+    opacity 320ms var(--ease-out),
+    transform 320ms var(--ease-out),
+    overlay 320ms allow-discrete,
+    display 320ms allow-discrete;
 }
 
 .image-modal:not([open]),
@@ -1249,7 +1251,6 @@ h3 {
 
   .image-modal[open]::backdrop {
     opacity: 0;
-    backdrop-filter: blur(0);
   }
 }
 
@@ -2257,7 +2258,23 @@ h3 {
 }
 
 .gallery-modal {
-  width: min(92vw, 1180px);
+  width: fit-content;
+  max-width: min(1180px, calc(100vw - 32px));
+}
+
+.gallery-modal .image-modal-inner {
+  width: fit-content;
+  max-width: 100%;
+  justify-items: center;
+}
+
+.gallery-modal .image-modal-inner img {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: calc(100dvh - 120px);
+  background: transparent;
+  object-fit: contain;
 }
 
 .blog-page {
