@@ -1,11 +1,11 @@
 {
     "schema_version": 2,
-    "commit": "",
-    "indexed_at": "2026-08-29T11:53:35Z",
-    "project": "cliinica-veterinaria",
-    "nodes": 316,
-    "edges": 397,
+    "commit": "6f321536c95ec1c58fb0e30619b2f387616632c8",
+    "indexed_at": "2026-08-29T13:05:24Z",
+    "project": "Users-fran-Desarrollo-work-cliinica-veterinaria",
+    "nodes": 460,
+    "edges": 564,
     "original_size": 1900544,
-    "compressed_size": 79026,
+    "compressed_size": 97956,
     "compression_level": 3
 }

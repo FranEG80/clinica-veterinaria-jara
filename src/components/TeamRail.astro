@@ -6,38 +6,106 @@ type TeamMember = {
   image: string;
 };
 
-type Props = { members: TeamMember[] };
-const { members } = Astro.props;
+type Props = {
+  members: TeamMember[];
+  featuredImage?: string;
+  featuredImageAlt?: string;
+  ctaHref?: string;
+  ctaLabel?: string;
+  accentHeading?: boolean;
+};
+const {
+  members,
+  featuredImage,
+  featuredImageAlt = "Equipo de Clínica Veterinaria Jara",
+  ctaHref,
+  ctaLabel = "Conócenos",
+  accentHeading = false,
+} = Astro.props;
+
+const specialties = [...new Set(members.map((member) => member.specialty).filter(Boolean))].slice(
+  0,
+  5
+);
+const vetCount = members.filter((member) => !/auxiliar/i.test(member.role)).length;
+const assistantCount = members.length - vetCount;
 ---
 
 <section class="team-section" id="equipo" aria-labelledby="team-title">
-  <div class="section-shell team-heading reveal-block">
-    <h2 id="team-title">Profesionales que conocen<br />su historia.</h2>
-    <p>
-      Un equipo veterinario y auxiliar que combina experiencia, actualización constante y
-      atención cercana.
-    </p>
+  <div
+    class:list={[
+      "section-shell",
+      "team-heading",
+      "reveal-block",
+      { "team-heading-with-featured": Boolean(featuredImage) },
+    ]}
+  >
+    <div class="team-heading-copy">
+      <p class="page-kicker team-kicker">El equipo · Jara</p>
+      <h2 id="team-title">
+        Profesionales<br />que {accentHeading ? <i>conocen</i> : "conocen"}<br />su historia.
+      </h2>
+      <p>
+        Un equipo veterinario y auxiliar que combina experiencia, actualización constante y
+        atención cercana.
+      </p>
+      {specialties.length > 0 && (
+        <ul class="team-specialties" aria-label="Áreas del equipo">
+          {specialties.map((specialty) => (
+            <li>{specialty}</li>
+          ))}
+        </ul>
+      )}
+      {ctaHref && (
+        <a class="team-cta" href={ctaHref}>
+          <span>{ctaLabel}</span>
+          <svg viewBox="0 0 18 18" aria-hidden="true" focusable="false">
+            <path d="M4 14 14 4M6 4h8v8" fill="none" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+        </a>
+      )}
+    </div>
+    {featuredImage && (
+      <figure class="team-heading-featured">
+        <img
+          src={featuredImage}
+          alt={featuredImageAlt}
+          width="1200"
+          height="800"
+          loading="lazy"
+          decoding="async"
+        />
+        <figcaption class="team-featured-badge">
+          <strong>{members.length}</strong>
+          <span>
+            profesionales · {vetCount} veterinarios y {assistantCount} auxiliares
+          </span>
+        </figcaption>
+      </figure>
+    )}
   </div>
 
-  <div class="team-rail" tabindex="0" aria-label="Equipo de Clínica Veterinaria Jara">
-    {members.map((member) => (
-      <article class="team-member reveal-block">
-        <div class="team-photo">
-          <img
-            src={member.image}
-            alt={member.name}
-            width="1200"
-            height="1800"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-        <div class="team-copy">
-          <h3>{member.name}</h3>
-          <p>{member.role}</p>
-          <span>{member.specialty}</span>
-        </div>
-      </article>
-    ))}
-  </div>
+  {!featuredImage && (
+    <div class="team-rail" tabindex="0" aria-label="Equipo de Clínica Veterinaria Jara">
+      {members.map((member) => (
+        <article class="team-member reveal-block">
+          <div class="team-photo">
+            <img
+              src={member.image}
+              alt={member.name}
+              width="1200"
+              height="1800"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div class="team-copy">
+            <h3>{member.name}</h3>
+            <p>{member.role}</p>
+            <span>{member.specialty}</span>
+          </div>
+        </article>
+      ))}
+    </div>
+  )}
 </section>

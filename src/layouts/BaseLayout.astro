@@ -20,7 +20,7 @@ const {
   description = "Cirugía, diagnóstico por imagen, hospitalización, laboratorio y medicina interna con atención veterinaria cercana.",
   image = "https://veterinariajara.es/wp-content/uploads/2022/09/Clinica-Veterinaria-Jara-Quienes-Somos.jpg",
   currentPath = Astro.url.pathname,
-  noIndex = false,
+  noIndex = true,
   canonicalPath = Astro.url.pathname,
 } = Astro.props;
 
@@ -34,7 +34,21 @@ const canonical = new URL(canonicalPath, Astro.site);
     <meta name="viewport" content="width=device-width" />
     <meta name="theme-color" content="#fcfcfc" />
     <meta name="description" content={description} />
-    {noIndex && <meta name="robots" content="noindex,nofollow" />}
+    {
+      noIndex && (
+        <>
+          <meta
+            name="robots"
+            content="noindex,nofollow,noarchive,nosnippet,noimageindex"
+          />
+          <meta
+            name="googlebot"
+            content="noindex,nofollow,noarchive,nosnippet,noimageindex"
+          />
+          <meta name="robots" content="noai, noimageai" />
+        </>
+      )
+    }
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="canonical" href={canonical} />
     <meta property="og:type" content="website" />

@@ -12,16 +12,20 @@
       "src/components/Footer.astro",
       "src/components/Header.astro",
       "src/pages/index.astro",
-      "src/pages/sobre-nosotros.astro",
       "src/pages/nuestros-servicios.astro",
-      "src/pages/equipo.astro",
+      "src/pages/sobre-nosotros.astro",
       "src/pages/galeria-de-mascotas.astro",
       "src/pages/contacto.astro"
     ]
   },
   "wordpress": {
     "apiUrl": "https://veterinariajara.es/wp-json/wp/v2",
-    "collections": ["pages", "media", "posts", "categories"],
+    "collections": [
+      "pages",
+      "media",
+      "posts",
+      "categories"
+    ],
     "status": "configured-but-not-exported",
     "exportNote": "Los contenidos reales de WordPress deben incorporarse aquí cuando el endpoint esté accesible."
   },
@@ -35,29 +39,74 @@
     "favicon": "/favicon.png",
     "founded": 2015,
     "navigation": [
-      { "href": "/sobre-nosotros/", "label": "Clínica" },
-      { "href": "/nuestros-servicios/", "label": "Servicios" },
-      { "href": "/equipo/", "label": "Equipo" },
-      { "href": "/blog/", "label": "Blog" },
-      { "href": "/contacto/", "label": "Contacto" }
+      {
+        "href": "/sobre-nosotros/",
+        "label": "Clínica"
+      },
+      {
+        "href": "/nuestros-servicios/",
+        "label": "Servicios"
+      },
+      {
+        "href": "/servicios/peluqueria-especializada/",
+        "label": "Peluquería Especializada"
+      },
+      {
+        "href": "/blog/",
+        "label": "Blog"
+      },
+      {
+        "href": "/contacto/",
+        "label": "Contacto"
+      }
     ],
     "footerNavigation": {
       "clinic": [
-        { "href": "/sobre-nosotros/", "label": "Sobre nosotros" },
-        { "href": "/equipo/", "label": "Equipo" },
-        { "href": "/galeria-de-mascotas/", "label": "Galería" },
-        { "href": "/blog/", "label": "Blog" }
+        {
+          "href": "/sobre-nosotros/",
+          "label": "Nuestra clínica"
+        },
+        {
+          "href": "/galeria-de-mascotas/",
+          "label": "Galería"
+        },
+        {
+          "href": "/blog/",
+          "label": "Blog"
+        },
+        {
+          "href": "/contacto/",
+          "label": "Contacto"
+        }
       ],
       "services": [
-        { "href": "/cirugia/", "label": "Cirugía" },
-        { "href": "/diagnostico-por-imagen/", "label": "Diagnóstico" },
-        { "href": "/hospitalizacion/", "label": "Hospitalización" },
-        { "href": "/nuestros-servicios/", "label": "Ver todos" }
+        {
+          "href": "/servicios/cirugia/",
+          "label": "Cirugía"
+        },
+        {
+          "href": "/servicios/diagnostico-por-imagen/",
+          "label": "Diagnóstico"
+        },
+        {
+          "href": "/servicios/peluqueria-especializada/",
+          "label": "Peluquería"
+        },
+        {
+          "href": "/nuestros-servicios/",
+          "label": "Ver todos"
+        }
       ]
     },
     "legal": [
-      { "slug": "terminos-y-condiciones", "title": "Términos y condiciones" },
-      { "slug": "politica-de-cookies-ue", "title": "Política de cookies" }
+      {
+        "slug": "terminos-y-condiciones",
+        "title": "Términos y condiciones"
+      },
+      {
+        "slug": "politica-de-cookies-ue",
+        "title": "Política de cookies"
+      }
     ]
   },
   "contact": {
@@ -93,7 +142,10 @@
   },
   "home": {
     "hero": {
-      "title": ["Su salud.", "Su mundo."],
+      "title": [
+        "Su salud,",
+        "Su mundo."
+      ],
       "description": "Medicina veterinaria avanzada con el cuidado cercano de siempre.",
       "place": "Villanueva de Córdoba · Los Pedroches",
       "image": "peluqueria",
@@ -106,7 +158,10 @@
       "surgeryImageAlt": "Quirófano de Clínica Veterinaria Jara"
     },
     "story": {
-      "title": ["La precisión que necesitan.", "El cuidado que reconocen."],
+      "title": [
+        "La precisión que necesitan.",
+        "El cuidado que reconocen."
+      ],
       "description": "Desde 2015, Clínica Veterinaria Jara reúne tecnología, formación continua y una forma cercana de acompañar a cada familia.",
       "image": "nosotros",
       "imageAlt": "Equipo de Clínica Veterinaria Jara junto a sus pacientes",
@@ -114,11 +169,17 @@
       "ctaHref": "/sobre-nosotros/"
     },
     "services": {
-      "title": ["Todo lo que necesitan.", "En un mismo lugar."],
+      "title": [
+        "Todo lo que necesitan.",
+        "En un mismo lugar."
+      ],
       "description": "Prevención, diagnóstico y tratamiento conectados por un equipo que conoce cada caso."
     },
     "team": {
-      "title": ["Profesionales que conocen", "su historia."],
+      "title": [
+        "Profesionales que conocen",
+        "su historia."
+      ],
       "description": "Un equipo veterinario y auxiliar que combina experiencia, actualización constante y atención cercana."
     },
     "contact": {
@@ -127,14 +188,23 @@
       "description": "Para consultas y citas, llámanos o escríbenos. Si se trata de una urgencia, utiliza el teléfono específico."
     },
     "proof": [
-      { "value": "2015", "label": "Fundación de la clínica" },
-      { "value": "Cirugía · Hospitalización · UCI", "label": "Atención clínica y seguimiento en un mismo centro" },
-      { "value": "Primera Cat Friendly Clinic nivel Plata de la provincia de Córdoba", "image": "/assets/cat-friendly.png" }
+      {
+        "value": "2015",
+        "label": "Fundación de la clínica"
+      },
+      {
+        "value": "Cirugía · Hospitalización · UCI",
+        "label": "Atención clínica y seguimiento en un mismo centro"
+      },
+      {
+        "value": "Primera Cat Friendly Clinic nivel Plata de la provincia de Córdoba",
+        "image": "/assets/cat-friendly.png"
+      }
     ]
   },
   "pages": {
     "sobre-nosotros": {
-      "title": "La clínica",
+      "title": "Nuestra clínica",
       "description": "Conoce la historia, las instalaciones y el equipo de Clínica Veterinaria Jara en Villanueva de Córdoba.",
       "hero": {
         "label": "La clínica",
@@ -148,15 +218,27 @@
         "label": "Nuestra forma de trabajar",
         "title": "Entender primero. Explicar siempre.",
         "items": [
-          { "number": "01", "title": "Escucha clínica", "description": "Cada caso empieza por conocer al paciente, su historia y lo que preocupa a su familia." },
-          { "number": "02", "title": "Decisiones claras", "description": "Explicamos las pruebas, las alternativas y el seguimiento con lenguaje comprensible." },
-          { "number": "03", "title": "Cuidado continuo", "description": "La atención no termina en consulta: acompañamos la evolución y cada nueva etapa." }
+          {
+            "number": "01",
+            "title": "Escucha clínica",
+            "description": "Cada caso empieza por conocer al paciente, su historia y lo que preocupa a su familia."
+          },
+          {
+            "number": "02",
+            "title": "Decisiones claras",
+            "description": "Explicamos las pruebas, las alternativas y el seguimiento con lenguaje comprensible."
+          },
+          {
+            "number": "03",
+            "title": "Cuidado continuo",
+            "description": "La atención no termina en consulta: acompañamos la evolución y cada nueva etapa."
+          }
         ]
       }
     },
     "nuestros-servicios": {
       "title": "Servicios veterinarios",
-      "description": "Cirugía, diagnóstico por imagen, hospitalización, medicina interna, laboratorio, odontología, vacunación y peluquería.",
+      "description": "Cirugía, diagnóstico por imagen, hospitalización, medicina interna, laboratorio, odontología y vacunación.",
       "hero": {
         "label": "Servicios",
         "title": "Capacidad clínica para cuidar mejor.",
@@ -165,20 +247,10 @@
         "imageAlt": "Quirófano de Clínica Veterinaria Jara",
         "accent": "lime"
       },
-      "urgentBand": { "question": "¿Necesita atención urgente?", "phone": "659 967 706" }
-    },
-    "equipo": {
-      "title": "Equipo veterinario",
-      "description": "Conoce al equipo veterinario y auxiliar de Clínica Veterinaria Jara.",
-      "hero": {
-        "label": "Equipo Jara",
-        "title": "Especialistas, pero sobre todo cercanos.",
-        "intro": "Un equipo multidisciplinar que comparte información, experiencia y una misma manera de cuidar.",
-        "image": "jessica",
-        "imageAlt": "Profesional del equipo de Clínica Veterinaria Jara",
-        "accent": "cyan"
-      },
-      "statement": "Veterinaria, cirugía, diagnóstico, hospitalización y cuidado auxiliar trabajan como una sola órbita alrededor de cada paciente."
+      "urgentBand": {
+        "question": "¿Necesita atención urgente?",
+        "phone": "659 967 706"
+      }
     },
     "galeria-de-mascotas": {
       "title": "Galería de mascotas",
@@ -218,7 +290,13 @@
       "summary": "Un quirófano preparado para intervenir con precisión y acompañar cada recuperación.",
       "detail": "La clínica ofrece cirugía general con seguimiento del paciente antes, durante y después de la intervención.",
       "mediaSlug": "cirugia",
-      "gallerySlugs": ["cirugia-1", "cirugia-2", "cirugia-3", "cirugia-4", "cirugia-5"],
+      "gallerySlugs": [
+        "cirugia-1",
+        "cirugia-2",
+        "cirugia-3",
+        "cirugia-4",
+        "cirugia-5"
+      ],
       "accent": "lime"
     },
     {
@@ -228,7 +306,12 @@
       "summary": "Radiología y ecografía para entender antes, decidir mejor y actuar a tiempo.",
       "detail": "El diagnóstico por imagen ayuda al equipo a estudiar cada caso con información visual y orientar el tratamiento.",
       "mediaSlug": "diagnostico-por-imagen",
-      "gallerySlugs": ["diagnostico-por-imagen", "sala-diagnostico", "radiologia-1", "ecografia-1"],
+      "gallerySlugs": [
+        "diagnostico-por-imagen",
+        "sala-diagnostico",
+        "radiologia-1",
+        "ecografia-1"
+      ],
       "accent": "coral"
     },
     {
@@ -238,7 +321,12 @@
       "summary": "Vigilancia, calma y cuidados continuos cuando quedarse es la mejor opción.",
       "detail": "La hospitalización permite observar la evolución, administrar tratamiento y responder a cambios con rapidez.",
       "mediaSlug": "hospitalizacion",
-      "gallerySlugs": ["hospitalizacion", "hospitalizacion-2", "transfusion", "transfusion2"],
+      "gallerySlugs": [
+        "hospitalizacion",
+        "hospitalizacion-2",
+        "transfusion",
+        "transfusion2"
+      ],
       "accent": "cyan"
     },
     {
@@ -248,7 +336,11 @@
       "summary": "Una mirada completa para síntomas complejos y pacientes que necesitan seguimiento.",
       "detail": "La medicina interna reúne historia clínica, exploración y pruebas para abordar casos que requieren una visión global.",
       "mediaSlug": "medicina-interna",
-      "gallerySlugs": ["medicina-interna", "consulta", "sala-diagnostico"],
+      "gallerySlugs": [
+        "medicina-interna",
+        "consulta",
+        "sala-diagnostico"
+      ],
       "accent": "orange"
     },
     {
@@ -258,7 +350,12 @@
       "summary": "Resultados en clínica para ganar tiempo cuando cada decisión cuenta.",
       "detail": "La tecnología de laboratorio permite analizar muestras y apoyar el diagnóstico desde la propia clínica.",
       "mediaSlug": "laboratorio-de-analisis",
-      "gallerySlugs": ["laboratorio-de-analisis", "bioquimica1", "bioquimica2", "transfusion"],
+      "gallerySlugs": [
+        "laboratorio-de-analisis",
+        "bioquimica1",
+        "bioquimica2",
+        "transfusion"
+      ],
       "accent": "lime"
     },
     {
@@ -268,7 +365,10 @@
       "summary": "Salud oral para comer, jugar y vivir sin molestias evitables.",
       "detail": "La atención odontológica ayuda a prevenir y tratar problemas de boca y dientes que afectan al bienestar general.",
       "mediaSlug": "odontologia",
-      "gallerySlugs": ["odontologia", "consulta"],
+      "gallerySlugs": [
+        "odontologia",
+        "consulta"
+      ],
       "accent": "coral"
     },
     {
@@ -278,7 +378,10 @@
       "summary": "Prevención y protección adaptadas a cada etapa de su vida.",
       "detail": "Los planes preventivos, la vacunación y la identificación se adaptan a la edad y situación de cada paciente.",
       "mediaSlug": "vacunacion",
-      "gallerySlugs": ["vacunacion", "consulta"],
+      "gallerySlugs": [
+        "vacunacion",
+        "consulta"
+      ],
       "accent": "cyan"
     },
     {
@@ -288,17 +391,56 @@
       "summary": "Higiene y cuidado del manto con atención a su comodidad.",
       "detail": "El servicio de peluquería está orientado al bienestar, la higiene y las necesidades particulares de cada animal.",
       "mediaSlug": "peluqueria",
-      "gallerySlugs": ["peluqueria", "consulta"],
+      "gallerySlugs": [
+        "peluqueria",
+        "consulta"
+      ],
       "accent": "orange"
     }
   ],
   "team": [
-    { "name": "Jéssica Bernabé Rico", "role": "Veterinaria · Cofundadora", "specialty": "Diagnóstico por imagen", "mediaSlug": "jessica", "fallbackKey": "jessica" },
-    { "name": "Raúl Castro Berzosa", "role": "Veterinario · Cofundador", "specialty": "Cirugía general", "mediaSlug": "raul-2", "fallbackKey": "raul" },
-    { "name": "Jesús Cascos", "role": "Veterinario", "specialty": "Medicina felina", "mediaSlug": "jesus", "fallbackKey": "jesus" },
-    { "name": "Sonia Vidueira", "role": "Auxiliar veterinaria", "specialty": "Peluquería especializada", "mediaSlug": "sonia", "fallbackKey": "sonia" },
-    { "name": "Bartolomé Redondo", "role": "Auxiliar veterinario", "specialty": "Atención clínica", "mediaSlug": "bartolome", "fallbackKey": "bartolome" },
-    { "name": "Nina Manosalbas", "role": "Auxiliar veterinaria", "specialty": "Peluquería especializada", "mediaSlug": "nina", "fallbackKey": "nina" }
+    {
+      "name": "Jéssica Bernabé Rico",
+      "role": "Veterinaria · Cofundadora",
+      "specialty": "Diagnóstico por imagen",
+      "mediaSlug": "jessica",
+      "fallbackKey": "jessica"
+    },
+    {
+      "name": "Raúl Castro Berzosa",
+      "role": "Veterinario · Cofundador",
+      "specialty": "Cirugía general",
+      "mediaSlug": "raul-2",
+      "fallbackKey": "raul"
+    },
+    {
+      "name": "Jesús Cascos",
+      "role": "Veterinario",
+      "specialty": "Medicina felina",
+      "mediaSlug": "jesus",
+      "fallbackKey": "jesus"
+    },
+    {
+      "name": "Sonia Vidueira",
+      "role": "Auxiliar veterinaria",
+      "specialty": "Peluquería especializada",
+      "mediaSlug": "sonia",
+      "fallbackKey": "sonia"
+    },
+    {
+      "name": "Bartolomé Redondo",
+      "role": "Auxiliar veterinario",
+      "specialty": "Atención clínica",
+      "mediaSlug": "bartolome",
+      "fallbackKey": "bartolome"
+    },
+    {
+      "name": "Nina Manosalbas",
+      "role": "Auxiliar veterinaria",
+      "specialty": "Peluquería especializada",
+      "mediaSlug": "nina",
+      "fallbackKey": "nina"
+    }
   ],
   "media": {
     "hero": "https://veterinariajara.es/wp-content/uploads/2022/09/PELUQUERIA.jpg",
@@ -346,7 +488,9 @@
         "date": "2026-06-18T10:00:00",
         "modified": "2026-06-18T10:00:00",
         "featuredMedia": 112,
-        "categories": [1],
+        "categories": [
+          1
+        ],
         "isDemo": true
       },
       {
@@ -359,7 +503,9 @@
         "date": "2026-05-07T10:00:00",
         "modified": "2026-05-07T10:00:00",
         "featuredMedia": 109,
-        "categories": [1],
+        "categories": [
+          1
+        ],
         "isDemo": true
       }
     ],
@@ -374,6 +520,14 @@
       "posts": "slug, title, excerpt, contentHtml, date, modified, featuredMedia, categories",
       "categories": "id, slug, name, count"
     },
-    "requiredForOfflineMode": ["site", "contact", "pages", "services", "team", "media", "blog"]
+    "requiredForOfflineMode": [
+      "site",
+      "contact",
+      "pages",
+      "services",
+      "team",
+      "media",
+      "blog"
+    ]
   }
 }

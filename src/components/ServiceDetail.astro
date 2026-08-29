@@ -15,7 +15,7 @@ type Props = {
   noIndex?: boolean;
 };
 
-const { service, canonicalPath = `/${service.slug}/`, noIndex = false } = Astro.props;
+const { service, canonicalPath = `/${service.slug}/`, noIndex = true } = Astro.props;
 const content = await getClinicContent();
 const image = mediaUrl(content, service.mediaSlug, service.mediaSlug);
 const wordpressPage = content.pageBySlug.get(service.slug);
@@ -27,6 +27,8 @@ const galleryImages = service.gallerySlugs
 const serviceIndex = services.findIndex((item) => item.slug === service.slug);
 const nextService = services[(serviceIndex + 1) % services.length];
 const description = `${service.summary} Clínica Veterinaria Jara en Villanueva de Córdoba.`;
+const titleAccent = service.titleAccent;
+const titleRest = titleAccent ? service.title.slice(titleAccent.length).trim() : "";
 ---
 
 <BaseLayout
@@ -40,8 +42,11 @@ const description = `${service.summary} Clínica Veterinaria Jara en Villanueva 
     <header class="service-page-hero">
       <div class="service-page-copy">
         <p class="service-page-index">Servicio {String(serviceIndex + 1).padStart(2, "0")}</p>
-        <h1 class="service-page-title">{service.title}</h1>
+        <h1 class="service-page-title">
+          {titleAccent ? (<><i>{titleAccent}</i> {titleRest}</>) : service.title}
+        </h1>
         <p>{service.summary}</p>
+        {service.heroDetail && <p class="service-page-lead">{service.heroDetail}</p>}
         <div class="service-page-actions">
           <a class="button button-primary" href="tel:+34957120563">Pedir cita</a>
           <a class="button button-secondary tabular" href="tel:+34659967706">
@@ -64,6 +69,7 @@ const description = `${service.summary} Clínica Veterinaria Jara en Villanueva 
       </figure>
     </header>
 
+    {!service.heroDetail && (
     <section class="service-page-body section-shell" aria-labelledby="service-body-title">
       <div>
         <p class="service-page-index">Cuidado Jara</p>
@@ -108,6 +114,16 @@ const description = `${service.summary} Clínica Veterinaria Jara en Villanueva 
         </a>
       </div>
     </section>
+    )}
+
+    {service.heroDetail && (
+      <div class="service-page-next-only section-shell">
+        <a class="service-next" href={`/${nextService.slug}/`}>
+          <span>Siguiente servicio</span>
+          <strong>{nextService.shortTitle}</strong>
+        </a>
+      </div>
+    )}
   </article>
   <dialog class="image-modal" data-service-detail-modal aria-labelledby="service-detail-modal-title">
     <form method="dialog" class="image-modal-close-form">

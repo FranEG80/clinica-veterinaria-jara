@@ -14,7 +14,7 @@ const { title, intro, label, image, imageAlt, accent = "lime" } = Astro.props;
 <header class="page-hero" data-accent={accent}>
   <div class="page-hero-copy">
     <p class="page-kicker">{label}</p>
-    <h1>{title}</h1>
+    <h1 set:html={title} />
     <p class="page-intro">{intro}</p>
   </div>
 

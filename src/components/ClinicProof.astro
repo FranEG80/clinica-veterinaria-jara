@@ -1,0 +1,58 @@
+---
+type Props = {
+  /* Cuando el bloque no vive dentro de una sección con `section-shell`,
+     necesita su propio ancho contenido y el cierre inferior. */
+  standalone?: boolean;
+};
+
+const { standalone = false } = Astro.props;
+---
+
+<div
+  class:list={[
+    "proof-lines",
+    "reveal-block",
+    { "proof-lines-standalone": standalone },
+  ]}
+  aria-label="Datos de la clínica"
+>
+  <div class="proof-cell">
+    <span class="proof-eyebrow">Fundación de la clínica</span>
+    <strong class="display-number">2015</strong>
+  </div>
+  <div class="proof-cell">
+    <span class="proof-eyebrow">Servicios</span>
+    <strong>Cirugía · Hospitalización · UCI</strong>
+    <span class="proof-note">Atención clínica y seguimiento en un mismo centro</span>
+  </div>
+  <div class="proof-cell cat-friendly-proof">
+    <span class="proof-eyebrow">Acreditación</span>
+    <div class="cat-friendly-body">
+      <img
+        src="/assets/cat-friendly.png"
+        alt="Cat Friendly Clinic"
+        width="267"
+        height="189"
+        loading="lazy"
+      />
+      <strong>Primera Cat Friendly Clinic nivel Plata de la provincia de Córdoba</strong>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Full-bleed como en la home: las líneas superior e inferior llegan al borde
+     y solo el contenido respeta el canal lateral. */
+  .proof-lines-standalone {
+    width: 100%;
+    margin-top: 0;
+    padding-inline: max(24px, calc((100vw - 1440px) / 2));
+    border-bottom: 1px solid var(--line);
+  }
+
+  @media (max-width: 767px) {
+    .proof-lines-standalone {
+      padding-inline: 16px;
+    }
+  }
+</style>

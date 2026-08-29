@@ -18,7 +18,9 @@ const initial = items[0];
 >
   {showHeading && (
     <div class="services-heading reveal-block">
-      <h2 id="services-title">Todo lo que necesitan.<br />En un mismo lugar.</h2>
+      <h2 id="services-title">
+        Todo lo que <i>necesitan.</i><br />En un mismo <i>lugar.</i>
+      </h2>
       <p>
         Prevención, diagnóstico y tratamiento conectados por un equipo que conoce cada caso.
       </p>
@@ -75,3 +77,39 @@ const initial = items[0];
     </figure>
   </div>
 </section>
+
+<script>
+  const serviceExplorer = document.querySelector<HTMLElement>("[data-service-explorer]");
+
+  if (serviceExplorer) {
+    const rows = [...serviceExplorer.querySelectorAll<HTMLElement>("[data-service-item]")];
+    const preview = serviceExplorer.querySelector<HTMLElement>("[data-service-preview]");
+    const image = serviceExplorer.querySelector<HTMLImageElement>("[data-service-image]");
+    const title = serviceExplorer.querySelector<HTMLElement>("[data-service-title]");
+    const summary = serviceExplorer.querySelector<HTMLElement>("[data-service-summary]");
+    let active = rows[0];
+    let transitionTimer = 0;
+
+    const selectService = (row: HTMLElement) => {
+      if (row === active || !preview || !image || !title || !summary) return;
+      active = row;
+      rows.forEach((item) => item.classList.toggle("is-active", item === row));
+      preview.classList.add("is-changing");
+      window.clearTimeout(transitionTimer);
+      transitionTimer = window.setTimeout(() => {
+        const nextTitle = row.dataset.title ?? "Servicio veterinario";
+        image.src = row.dataset.image ?? image.src;
+        image.alt = `${nextTitle} en Clínica Veterinaria Jara`;
+        title.textContent = nextTitle;
+        summary.textContent = row.dataset.summary ?? "";
+        preview.dataset.accent = row.dataset.accent ?? "lime";
+        requestAnimationFrame(() => preview.classList.remove("is-changing"));
+      }, 110);
+    };
+
+    rows.forEach((row) => {
+      row.addEventListener("pointerenter", () => selectService(row));
+      row.addEventListener("focus", () => selectService(row));
+    });
+  }
+</script>

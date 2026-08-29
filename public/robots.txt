@@ -1,0 +1,39 @@
+# Despliegue de prueba: no indexar, no seguir, no rastrear.
+# El sitio real es https://veterinariajara.es
+User-agent: *
+Disallow: /
+
+# Rastreadores de IA (entrenamiento, RAG y búsqueda asistida).
+# Redundante con el "*" de arriba, explícito para agentes que solo
+# obedecen reglas dirigidas a su propio user-agent.
+User-agent: GPTBot
+User-agent: ChatGPT-User
+User-agent: OAI-SearchBot
+User-agent: ClaudeBot
+User-agent: Claude-User
+User-agent: Claude-SearchBot
+User-agent: anthropic-ai
+User-agent: Google-Extended
+User-agent: GoogleOther
+User-agent: Applebot-Extended
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: meta-externalagent
+User-agent: meta-externalfetcher
+User-agent: FacebookBot
+User-agent: Amazonbot
+User-agent: Bytespider
+User-agent: CCBot
+User-agent: cohere-ai
+User-agent: cohere-training-data-crawler
+User-agent: MistralAI-User
+User-agent: DuckAssistBot
+User-agent: AI2Bot
+User-agent: Diffbot
+User-agent: ImagesiftBot
+User-agent: Omgilibot
+User-agent: Timpibot
+User-agent: PanguBot
+User-agent: Webzio-Extended
+User-agent: YouBot
+Disallow: /

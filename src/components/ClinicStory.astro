@@ -1,10 +1,14 @@
 ---
+import ClinicProof from "./ClinicProof.astro";
+
 type Props = {
   clinicImage: string;
   clinicImageAlt?: string;
   ctaHref?: string;
   ctaLabel?: string;
+  cta: [{ href: string; label: string }][]
   showHeading?: boolean;
+  portraitImage?: boolean;
 };
 
 const {
@@ -12,30 +16,53 @@ const {
   clinicImageAlt = "Interior de Clínica Veterinaria Jara",
   ctaHref,
   ctaLabel = "Conócenos",
+  cta = [],
   showHeading = true,
+  portraitImage = false,
 } = Astro.props;
 ---
 
 <section
-  class:list={["story-section", "section-shell", { "story-section-no-heading": !showHeading }]}
+  class:list={[
+    "story-section",
+    "section-shell",
+    {
+      "story-section-no-heading": !showHeading,
+      "story-section-portrait": portraitImage,
+    },
+  ]}
   id="clinica"
   aria-labelledby={showHeading ? "story-title" : undefined}
   aria-label={showHeading ? undefined : "La clínica"}
 >
   {showHeading && (
     <div class="story-heading reveal-block">
-      <h2 id="story-title">La precisión que necesitan.<br />El cuidado que reconocen.</h2>
+      <h2 id="story-title">
+        La <i>precisión</i><br />que necesitan.<br />El <i>cuidado</i><br />que reconocen.
+      </h2>
       <p>
         Desde 2015, Clínica Veterinaria Jara reúne tecnología, formación continua y una forma
         cercana de acompañar a cada familia.
       </p>
-      {ctaHref && (
+      {ctaHref && false && (
         <a class="text-link story-cta" href={ctaHref}>
           <span>{ctaLabel}</span>
           <svg viewBox="0 0 18 18" aria-hidden="true" focusable="false">
             <path d="M4 14 14 4M6 4h8v8" fill="none" stroke="currentColor" stroke-width="1.5" />
           </svg>
         </a>
+      )}
+      {cta.length > 0 && (
+        <div class="story-cta-group" style="display: flex; align-items: center; justify-content: space-around;">
+          {cta.map(({ href, label }) => (
+            <a class="text-link story-cta" href={href}>
+              <span>{label}</span>
+              <svg viewBox="0 0 18 18" aria-hidden="true" focusable="false">
+                <path d="M4 14 14 4M6 4h8v8" fill="none" stroke="currentColor" stroke-width="1.5" />
+              </svg>
+            </a>
+          ))}
+        </div>
       )}
     </div>
   )}
@@ -44,31 +71,12 @@ const {
     <img
       src={clinicImage}
       alt={clinicImageAlt}
-      width="800"
-      height="600"
+      width={portraitImage ? 634 : 800}
+      height={portraitImage ? 846 : 600}
       loading="lazy"
       decoding="async"
     />
   </div>
 
-  <div class="proof-lines reveal-block" aria-label="Datos de la clínica">
-    <div>
-      <strong class="display-number">2015</strong>
-      <span>Fundación de la clínica</span>
-    </div>
-    <div>
-      <strong>Cirugía · Hospitalización · UCI</strong>
-      <span>Atención clínica y seguimiento en un mismo centro</span>
-    </div>
-    <div class="cat-friendly-proof">
-      <img
-        src="/assets/cat-friendly.png"
-        alt="Cat Friendly Clinic"
-        width="267"
-        height="189"
-        loading="lazy"
-      />
-      <span>Primera Cat Friendly Clinic nivel Plata de la provincia de Córdoba</span>
-    </div>
-  </div>
+  <ClinicProof />
 </section>

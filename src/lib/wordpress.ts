@@ -49,6 +49,10 @@ export type Service = {
   mediaSlug: string;
   gallerySlugs: string[];
   accent: "lime" | "coral" | "cyan" | "orange";
+  /** Texto que sustituye a la sección inferior: se muestra en el hero y omite el cuerpo. */
+  heroDetail?: string;
+  /** Fragmento inicial del título que se resalta con <i> en el hero. */
+  titleAccent?: string;
 };
 
 export const services: Service[] = [
@@ -61,7 +65,7 @@ export const services: Service[] = [
       "La clínica ofrece cirugía general con seguimiento del paciente antes, durante y después de la intervención.",
     mediaSlug: "cirugia",
     gallerySlugs: ["cirugia-1", "cirugia-2", "cirugia-3", "cirugia-4", "cirugia-5"],
-    accent: "lime",
+    accent: "cyan",
   },
   {
     slug: "diagnostico-por-imagen",
@@ -72,7 +76,7 @@ export const services: Service[] = [
       "El diagnóstico por imagen ayuda al equipo a estudiar cada caso con información visual y orientar el tratamiento.",
     mediaSlug: "diagnostico-por-imagen",
     gallerySlugs: ["diagnostico-por-imagen", "sala-diagnostico", "radiologia-1", "ecografia-1"],
-    accent: "coral",
+    accent: "lime",
   },
   {
     slug: "hospitalizacion",
@@ -83,7 +87,7 @@ export const services: Service[] = [
       "La hospitalización permite observar la evolución, administrar tratamiento y responder a cambios con rapidez.",
     mediaSlug: "hospitalizacion",
     gallerySlugs: ["hospitalizacion", "hospitalizacion-2", "transfusion", "transfusion2"],
-    accent: "cyan",
+    accent: "coral",
   },
   {
     slug: "medicina-interna",
@@ -139,8 +143,18 @@ export const services: Service[] = [
     mediaSlug: "peluqueria",
     gallerySlugs: ["peluqueria", "consulta"],
     accent: "orange",
+    titleAccent: "Peluquería",
+    heroDetail:
+      "Disponemos de un servicio de peluquería donde nuestras mascotas pueden recibir su baño relajante y además tratamientos especializados en perros con problemas de piel.",
   },
 ];
+
+export const GROOMING_SLUG = "peluqueria-especializada";
+
+/** Servicios clínicos: excluye peluquería, que tiene su propia entrada en el menú. */
+export const clinicServices: Service[] = services.filter(
+  (service) => service.slug !== GROOMING_SLUG
+);
 
 export const demoPosts: WordPressPost[] = [
   {

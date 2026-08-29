@@ -14,6 +14,38 @@ Materiales y reglas: collage fotográfico real, acrílico translúcido, líneas 
 - **Bricolage Grotesque** (self-hosted, variable): cuerpo, navegación, controles y lectura editorial.
 - El cuerpo parte de 16 px con `line-height: 1.55`; los teléfonos usan numerales tabulares (`.tabular`). No sustituir por Inter, Arial o Roboto.
 
+### Énfasis por cambio de voz en titulares
+
+Un fragmento del titular puede salir del registro arquitectónico (Barlow Condensed, mayúsculas, tinta) y entrar en el registro humano: se marca con `<i>` y la hoja de estilo lo convierte en Bricolage Grotesque, minúsculas y color de acento. No es cursiva: `font-style` se anula. El mecanismo nació en `.blog-masthead h1 i` y se extiende a `.page-hero h1`, `.story-heading h2`, `.services-heading h2`, `.team-heading h2` y `.principles-heading h2`.
+
+No basta con cambiar la voz: la palabra tiene que **integrarse en el lockup**, o se lee como un parche pegado. Cuatro condiciones:
+
+1. **Mismo cuerpo que las mayúsculas** (`font-size: 1em`). A cuerpo reducido la palabra se lee como pie de foto, no como parte del titular.
+2. **Interlineado apretado**: `line-height: 0.7`, la densidad del blog. Las líneas se rozan y la palabra en acento puede solaparse un poco con las mayúsculas de arriba; ese solape es el efecto, no un defecto.
+3. La palabra es `inline-block` con `line-height: 1` y kerning óptico `margin-inline: -0.03em`, que compensa el espacio de Barlow a cuerpo de titular (~0,22 em, un abismo en condensada).
+4. **Su posición se decide en el marcado, con `<br />` explícitos.** Nunca se deja al wrap automático.
+
+Dos colocaciones, distinguidas por clase explícita — no por selectores de hermano: `br + i` **no sirve**, porque los combinadores de hermanos ignoran los nodos de texto y `…<br />El <i>cuidado</i>` matchearía igual.
+
+- **`<i>` a secas** — comparte línea con mayúsculas: `Estamos <i>cerca</i><br />cuando nos necesite.`
+- **`<i class="solo">`** — ocupa su propia línea, siempre la última: `Capacidad clínica para<br /><i class="solo">cuidar mejor.</i>`. Se sangra `0.9ch` y recorta `-0.06em` por abajo para no colgar del bloque.
+
+Lo que no vale: palabra sola en una línea intermedia. Si el texto lo pide, se reescriben los `<br />`.
+
+En `.page-hero h1` con acento el cuerpo baja a `clamp(3.4rem, 5.2vw, 5.4rem)`. La columna del hero mide ~446 px en 1440 px, y a 86 px apenas entraban dos palabras por línea: los titulares se partían en huérfanas.
+
+El color sale de `--accent-voice`, que acompaña a `--active-accent` en cada bloque `[data-accent]`. Siempre usa la variante `-deep`: sobre `--ground`, los acentos puros dan 1,6:1 (lima), 2,7:1 (coral y cyan) y 3,1:1 (naranja) y no cumplen WCAG como texto; las variantes `-deep` van de 3,9:1 a 4,8:1.
+
+Reglas de uso:
+
+- Solo un titular tratado por bloque; los `h3`, el cierre de contacto (`.contact-copy h2`) y las fichas de servicio quedan en tinta pura.
+- De una a tres palabras, y que carguen sentido. Nunca conectores.
+- Un solo color por titular. En portada cada sección hereda el color de la página a la que enlaza: historia coral, servicios lima, equipo cyan. En `/nuestra-clinica/`, principios coral (`entender`, `explicar`) y equipo cyan (`conocen`).
+- `.principles-heading` apila kicker sobre titular y va a bandera izquierda, como `.team-heading`. Antes era una rejilla `0.55fr 1.45fr` que sangraba el titular y lo dejaba fuera del sistema; ahora comparte grupo tipográfico con `.story-heading h2` y compañía.
+- El fragmento en Bricolage ocupa más ancho por carácter: revisar el número de líneas y los `<br />` cada vez que se cambia el copy.
+
+Acentos por página: `/nuestra-clinica/` coral (`acompañan.`, `<i class="solo">`), `/sobre-nosotros/` coral (`acompañan.`, mismo titular que `/nuestra-clinica/`), `/nuestros-servicios/` lima (`cuidar mejor.`, `<i class="solo">`), `/galeria-de-mascotas/` coral (`centro`), `/contacto/` naranja (`cerca`), `/blog/` coral (`también`). La portada no trata su `h1`: la composición A del hero se mantiene intacta.
+
 ## Tokens actuales
 
 ```css
@@ -23,9 +55,13 @@ Materiales y reglas: collage fotográfico real, acrílico translúcido, líneas 
 --ink-soft: #4a433c;
 --line: rgba(16, 15, 15, 0.16);
 --lime: #b6d92c;
+--lime-deep: #6b8a10;    /* variante legible como texto */
 --coral: #f2716e;
+--coral-deep: #d1504d;
 --cyan: #4da8c2;
+--cyan-deep: #2c7d95;
 --orange: #e17226;
+--orange-deep: #c25f14;
 --violet-source: #957396; /* color fotográfico, no token de UI */
 --radius: 14px;
 --header-height: 72px; /* 68 px hasta 1023 px */
@@ -56,7 +92,11 @@ La navegación principal enlaza inicio, clínica, servicios, equipo y contacto; 
 
 ### Tratamiento editorial de Equipo y Blog
 
-La página `/equipo/` no reutiliza el rail horizontal de portada. Usa `TeamPortraits.astro`: una retícula editorial de 12 columnas con seis retratos, escalas, proporciones y offsets distintos. En móvil se convierte en una secuencia vertical con anchuras alternas, sin scroll horizontal. `TeamRail.astro` continúa siendo el resumen compacto de la home y de la página de clínica.
+La página de equipo no reutiliza el rail horizontal de portada. Usa `TeamPortraits.astro`: una retícula editorial de 12 columnas con seis retratos, escalas, proporciones y offsets distintos. `TeamRail.astro` continúa siendo el resumen compacto de la home y de la página de clínica.
+
+En escritorio (≥1024 px) los seis retratos se reparten en **dos filas asimétricas que alternan lado**: la fila 1 ocupa las columnas 1–8 y deja aire en 9–12; la fila 2 ocupa las columnas 5–12 y deja aire en 1–4. El vacío alternado es el recurso compositivo — no se rellena con contenido. Dentro de cada banda los tres retratos conservan anchuras distintas (3+3+2 columnas), proporciones distintas (`4/5`, `3/4`, `2/3`) y desfases verticales (`--portrait-shift`). El `row-gap` va en `clamp(100px, 9vw, 150px)` porque los desfases son `transform` y no cuentan para la altura de la fila.
+
+Por debajo de 1024 px la retícula vuelve a `flex` en filas de tres, y en móvil a secuencia vertical con anchuras alternas, sin scroll horizontal.
 
 `/blog/` tiene una cabecera propia basada en tipografía monumental y un recorte fotográfico real; no usa órbitas circulares decorativas. El primer artículo se presenta como portada superpuesta y el resto forma un archivo numerado con filas asimétricas. `/blog/[slug]/` usa cabecera art-directed, tiempo de lectura calculado desde el contenido, imagen de portada desplazada, rail editorial lateral y una columna de lectura con estilos específicos para titulares, listas, citas e imágenes de WordPress.
 
