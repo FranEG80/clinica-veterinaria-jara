@@ -3,6 +3,28 @@
 User-agent: *
 Disallow: /
 
+# Permit link-preview crawlers to read the HTML and social image on the test deploy.
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Facebot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: Slackbot
+Allow: /
+
+User-agent: Discordbot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
 # Rastreadores de IA (entrenamiento, RAG y búsqueda asistida).
 # Redundante con el "*" de arriba, explícito para agentes que solo
 # obedecen reglas dirigidas a su propio user-agent.

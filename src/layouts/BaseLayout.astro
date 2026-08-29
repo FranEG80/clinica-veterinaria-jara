@@ -16,18 +16,35 @@ type Props = {
 };
 
 const DEFAULT_SOCIAL_IMAGE = "/assets/og-jara.jpg";
+const DEFAULT_SOCIAL_IMAGE_WIDTH = "1568";
+const DEFAULT_SOCIAL_IMAGE_HEIGHT = "1003";
+
+const normalizeOrigin = (value?: string) => {
+  if (!value) return undefined;
+  return value.startsWith("http://") || value.startsWith("https://")
+    ? value
+    : `https://${value}`;
+};
 
 const {
   title = "Clínica Veterinaria Jara | Villanueva de Córdoba",
   description = "Cirugía, diagnóstico por imagen, hospitalización, laboratorio y medicina interna con atención veterinaria cercana.",
-  image = "/assets/og-jara.jpg",
+  image = DEFAULT_SOCIAL_IMAGE,
   currentPath = Astro.url.pathname,
   noIndex = true,
   canonicalPath = Astro.url.pathname,
 } = Astro.props;
 
 const canonical = new URL(canonicalPath, Astro.site);
-const socialImage = new URL(image, Astro.url);
+// `site` must remain the official domain for canonical URLs. Static builds do
+// not know the final preview host, so use the deploy origin for social assets.
+const deployOrigin =
+  normalizeOrigin(import.meta.env.PUBLIC_DEPLOY_ORIGIN) ??
+  normalizeOrigin(import.meta.env.VERCEL_URL) ??
+  normalizeOrigin(import.meta.env.DEPLOY_PRIME_URL) ??
+  normalizeOrigin(import.meta.env.CF_PAGES_URL) ??
+  Astro.url.origin;
+const socialImage = new URL(image, deployOrigin);
 ---
 
 <!doctype html>
@@ -67,8 +84,9 @@ const socialImage = new URL(image, Astro.url);
     {
       image === DEFAULT_SOCIAL_IMAGE && (
         <>
-          <meta property="og:image:width" content="1200" />
-          <meta property="og:image:height" content="630" />
+          <meta property="og:image:type" content="image/jpeg" />
+          <meta property="og:image:width" content={DEFAULT_SOCIAL_IMAGE_WIDTH} />
+          <meta property="og:image:height" content={DEFAULT_SOCIAL_IMAGE_HEIGHT} />
         </>
       )
     }
@@ -77,11 +95,9 @@ const socialImage = new URL(image, Astro.url);
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:image:alt" content={title} />
     <title>{title}</title>
   </head>
-  <script define:vars={{ socialImage, url: Astro.url, astro: Astro }}>
-    console.log({ url, astro});
-  </script>
   <body>
     <!--
       THESIS: El cuidado real aparece dentro de una órbita cromática; se rechaza el hero veterinario genérico de foto amable y tarjetas iguales.

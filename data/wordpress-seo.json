@@ -224,19 +224,24 @@
   "favicon": "https://veterinariajara.es/wp-content/uploads/2022/09/FAVICON-CLINICAVETERINARIAJARA.png"
  },
  "home": {
-  "title": "Clínica Veterinaria Jara - Clinica Veterinaria Jara",
-  "description": "Clinica Veterinaria Jara",
+  "title": "Clínica Veterinaria Jara | Villanueva de Córdoba",
+  "description": "Cirugía, diagnóstico por imagen, hospitalización, laboratorio y medicina interna con atención veterinaria cercana.",
   "keywords": "Clinica Veterinaria Jara",
   "canonical": "https://veterinariajara.es/",
-  "robots": "max-image-preview:large",
-  "og:title": "Clínica Veterinaria Jara - Clinica Veterinaria Jara",
-  "og:description": null,
-  "og:image": "https://veterinariajara.es/wp-content/uploads/2022/09/CLINICA-VETERINARIA-JARA.png",
-  "og:type": "article",
-  "og:site_name": "Clinica Veterinaria Jara - La clínica fue fundada en 2015 por los veterirnarios Jessica Bernabé Rico y Raúl Castro Berzosa. Un nuevo concepto de clínica en la comarca de Los Pedroches en el que se ofrecen los servicios de cirugía general, hospitalización, UCI, diagnóstico por imagen y los últimos avances en tecnología de laboratorio.",
+  "robots": "noindex,nofollow,noarchive,nosnippet,noimageindex",
+  "og:title": "Clínica Veterinaria Jara | Villanueva de Córdoba",
+  "og:description": "Cirugía, diagnóstico por imagen, hospitalización, laboratorio y medicina interna con atención veterinaria cercana.",
+  "og:image": "/assets/og-jara.jpg",
+  "og:image:type": "image/jpeg",
+  "og:image:width": "1568",
+  "og:image:height": "1003",
+  "og:type": "website",
+  "og:site_name": "Clínica Veterinaria Jara",
   "twitter:card": "summary_large_image",
-  "twitter:title": "Clínica Veterinaria Jara - Clinica Veterinaria Jara",
-  "twitter:description": null,
-  "favicon": "https://veterinariajara.es/wp-content/uploads/2022/09/FAVICON-CLINICAVETERINARIAJARA.png"
+  "twitter:title": "Clínica Veterinaria Jara | Villanueva de Córdoba",
+  "twitter:description": "Cirugía, diagnóstico por imagen, hospitalización, laboratorio y medicina interna con atención veterinaria cercana.",
+  "twitter:image": "/assets/og-jara.jpg",
+  "twitter:image:alt": "Clínica Veterinaria Jara | Villanueva de Córdoba",
+  "favicon": "/favicon.png"
  }
 }

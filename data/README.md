@@ -5,6 +5,7 @@ Esta carpeta contiene una instantánea portable del contenido que actualmente us
 ## Archivo principal
 
 - `site-content.json`: contenido normalizado de la web: identidad, navegación, contacto, páginas editoriales, servicios, equipo, medios y artículos de muestra.
+- `wordpress-seo.json`: instantánea de SEO de WordPress; la home se mantiene sincronizada con los metadatos que renderiza el frontend.
 
 ## Origen
 
