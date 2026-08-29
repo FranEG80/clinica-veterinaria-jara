@@ -79,6 +79,9 @@ const socialImage = new URL(image, Astro.url);
     <meta name="twitter:image" content={socialImage} />
     <title>{title}</title>
   </head>
+  <script define:vars={{ socialImage }}>
+    console.log({ socialImage });
+  </script>
   <body>
     <!--
       THESIS: El cuidado real aparece dentro de una órbita cromática; se rechaza el hero veterinario genérico de foto amable y tarjetas iguales.
@@ -88,7 +91,7 @@ const socialImage = new URL(image, Astro.url);
       FORM: Órbita Jara, dirección 7, comp A Collage orbital; seed 1bfbbe43.
       FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
     -->
-    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <!-- <a class="skip-link" href="#contenido">Saltar al contenido</a> -->
     <Header currentPath={currentPath} />
     <main id="contenido">
       <slot />
