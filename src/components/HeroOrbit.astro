@@ -1,0 +1,113 @@
+---
+import type { Service } from "../lib/wordpress";
+
+type Props = {
+  heroImage: string;
+  consultationImage: string;
+  waitingRoomImage: string;
+  surgeryImage: string;
+  featuredServices: Service[];
+};
+
+const {
+  heroImage,
+  consultationImage,
+  waitingRoomImage,
+  surgeryImage,
+  featuredServices,
+} = Astro.props;
+---
+
+<section class="hero" aria-labelledby="hero-title" data-orbit-hero>
+  <div class="hero-main">
+    <div class="hero-copy">
+      <h1 id="hero-title">
+        <span>Su salud.</span>
+        <span>Su mundo.</span>
+      </h1>
+      <p>Medicina veterinaria avanzada con el cuidado cercano de siempre.</p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="tel:+34957120563">Pedir cita</a>
+        <a class="button button-secondary" href="tel:+34659967706">
+          <span>Urgencias</span>
+          <span class="tabular">659 967 706</span>
+        </a>
+      </div>
+      <p class="hero-place">Villanueva de Córdoba · Los Pedroches</p>
+    </div>
+
+    <div class="orbit-stage" aria-label="Instalaciones y atención de Clínica Veterinaria Jara">
+      <div class="acrylic acrylic-lime" data-orbit-layer="0.35"></div>
+      <div class="acrylic acrylic-coral" data-orbit-layer="0.55"></div>
+      <div class="acrylic acrylic-cyan" data-orbit-layer="0.8"></div>
+      <div class="acrylic acrylic-orange" data-orbit-layer="0.45"></div>
+
+      <figure class="orbit-photo orbit-photo-main" data-orbit-layer="0.2">
+        <img
+          src={heroImage}
+          alt="Paciente durante una sesión de peluquería en Clínica Veterinaria Jara"
+          width="1500"
+          height="1000"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </figure>
+
+      <figure class="orbit-photo orbit-photo-consultation" data-orbit-layer="0.5">
+        <img
+          src={consultationImage}
+          alt="Consulta de Clínica Veterinaria Jara"
+          width="800"
+          height="600"
+          loading="eager"
+          decoding="async"
+        />
+      </figure>
+
+      <figure class="orbit-photo orbit-photo-waiting" data-orbit-layer="0.7">
+        <img
+          src={waitingRoomImage}
+          alt="Sala de espera de Clínica Veterinaria Jara"
+          width="800"
+          height="600"
+          loading="eager"
+          decoding="async"
+        />
+      </figure>
+
+      <figure class="orbit-photo orbit-photo-surgery" data-orbit-layer="0.6">
+        <img
+          src={surgeryImage}
+          alt="Quirófano de Clínica Veterinaria Jara"
+          width="800"
+          height="600"
+          loading="eager"
+          decoding="async"
+        />
+      </figure>
+
+      <svg class="orbit-lines" viewBox="0 0 900 780" aria-hidden="true" focusable="false">
+        <path d="M88 563C258 744 625 752 811 516C942 349 830 102 606 53C364 0 89 169 99 409C104 519 159 618 246 683" />
+        <path d="M29 482C162 662 444 727 681 635C859 566 944 379 848 210C729 2 381 -42 162 143C45 242 5 367 29 482Z" />
+        <path d="M185 720C373 772 682 653 775 425C846 250 739 101 569 87" />
+        <circle cx="151" cy="609" r="11" class="node node-coral" />
+        <circle cx="508" cy="719" r="11" class="node node-cyan" />
+        <circle cx="818" cy="493" r="11" class="node node-orange" />
+        <circle cx="612" cy="56" r="11" class="node node-lime" />
+      </svg>
+
+      <a class="hero-email" href="mailto:contacto@clinicaveterinariajara.es">
+        contacto@clinicaveterinariajara.es
+      </a>
+    </div>
+  </div>
+
+  <nav class="service-rail" aria-label="Servicios destacados">
+    {featuredServices.map((service) => (
+      <a href={`/${service.slug}/`} data-accent={service.accent}>
+        <span class="service-signal" aria-hidden="true"></span>
+        <span>{service.shortTitle}</span>
+      </a>
+    ))}
+  </nav>
+</section>

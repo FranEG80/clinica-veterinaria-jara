@@ -1,0 +1,43 @@
+---
+type TeamMember = {
+  name: string;
+  role: string;
+  specialty: string;
+  image: string;
+};
+
+type Props = { members: TeamMember[] };
+const { members } = Astro.props;
+---
+
+<section class="team-section" id="equipo" aria-labelledby="team-title">
+  <div class="section-shell team-heading reveal-block">
+    <h2 id="team-title">Profesionales que conocen<br />su historia.</h2>
+    <p>
+      Un equipo veterinario y auxiliar que combina experiencia, actualización constante y
+      atención cercana.
+    </p>
+  </div>
+
+  <div class="team-rail" tabindex="0" aria-label="Equipo de Clínica Veterinaria Jara">
+    {members.map((member) => (
+      <article class="team-member reveal-block">
+        <div class="team-photo">
+          <img
+            src={member.image}
+            alt={member.name}
+            width="1200"
+            height="1800"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="team-copy">
+          <h3>{member.name}</h3>
+          <p>{member.role}</p>
+          <span>{member.specialty}</span>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>

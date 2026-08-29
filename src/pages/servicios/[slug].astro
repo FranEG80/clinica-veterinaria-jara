@@ -1,0 +1,13 @@
+---
+import ServiceDetail from "../../components/ServiceDetail.astro";
+import { services, type Service } from "../../lib/wordpress";
+
+export function getStaticPaths() {
+  return services.map((service) => ({ params: { slug: service.slug }, props: { service } }));
+}
+
+type Props = { service: Service };
+const { service } = Astro.props;
+---
+
+<ServiceDetail service={service} canonicalPath={`/${service.slug}/`} noIndex />

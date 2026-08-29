@@ -1,0 +1,77 @@
+---
+import type { Service } from "../lib/wordpress";
+
+type ServiceView = Service & { image: string };
+type Props = {
+  items: ServiceView[];
+  showHeading?: boolean;
+};
+const { items, showHeading = true } = Astro.props;
+const initial = items[0];
+---
+
+<section
+  class="services-section section-shell"
+  id="servicios"
+  aria-labelledby={showHeading ? "services-title" : undefined}
+  aria-label={showHeading ? undefined : "Servicios veterinarios"}
+>
+  {showHeading && (
+    <div class="services-heading reveal-block">
+      <h2 id="services-title">Todo lo que necesitan.<br />En un mismo lugar.</h2>
+      <p>
+        Prevención, diagnóstico y tratamiento conectados por un equipo que conoce cada caso.
+      </p>
+    </div>
+  )}
+
+  <div class="service-explorer" data-service-explorer>
+    <div class="service-list" aria-label="Servicios veterinarios">
+      {items.map((service, index) => (
+        <a
+          class:list={["service-row", { "is-active": index === 0 }]}
+          href={`/${service.slug}/`}
+          data-service-item
+          data-image={service.image}
+          data-title={service.title}
+          data-summary={service.summary}
+          data-accent={service.accent}
+        >
+          <div class="service-row-copy">
+            {showHeading ? <h3>{service.title}</h3> : <h2>{service.title}</h2>}
+            <p>{service.summary}</p>
+          </div>
+          <span class="service-link-label">Ver servicio</span>
+          <img
+            class="service-row-image"
+            src={service.image}
+            alt={`Servicio de ${service.title} en Clínica Veterinaria Jara`}
+            width="960"
+            height="720"
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+      ))}
+    </div>
+
+    <figure class="service-preview" data-service-preview data-accent={initial.accent}>
+      <div class="service-preview-frame">
+        <img
+          src={initial.image}
+          alt={`Servicio de ${initial.title} en Clínica Veterinaria Jara`}
+          width="960"
+          height="720"
+          loading="lazy"
+          decoding="async"
+          data-service-image
+        />
+        <div class="preview-acrylic" aria-hidden="true"></div>
+      </div>
+      <figcaption aria-live="polite">
+        <strong data-service-title>{initial.title}</strong>
+        <span data-service-summary>{initial.summary}</span>
+      </figcaption>
+    </figure>
+  </div>
+</section>

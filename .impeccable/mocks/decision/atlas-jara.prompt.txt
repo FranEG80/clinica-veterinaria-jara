@@ -1,0 +1,5 @@
+Use case: text-localization
+Asset type: existing veterinary website design comp
+Input images: Image 1 is the edit target.
+Primary request: replace only the small location label "VALLADOLID, ESPAÑA" with the exact text "VILLANUEVA DE CÓRDOBA".
+Constraints: change only that location label; preserve every other pixel, layout, typography, spacing, logo, photograph, headline, labels, colors and dimensions unchanged; render the replacement once, correctly accented; no added text; no watermark.

@@ -1,0 +1,81 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ContactSection from "../../components/ContactSection.astro";
+import {
+  getClinicContent,
+  getBlogPosts,
+  plainText,
+  postImage,
+  safeWordPressHtml,
+  type WordPressPost,
+} from "../../lib/wordpress";
+
+export async function getStaticPaths() {
+  const content = await getClinicContent();
+  return getBlogPosts(content).map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+type Props = { post: WordPressPost };
+const { post } = Astro.props;
+const content = await getClinicContent();
+const image = postImage(content, post);
+const title = plainText(post.title.rendered);
+const description = plainText(post.excerpt.rendered).slice(0, 160);
+const category = content.categoryById.get(post.categories[0]);
+const wordCount = plainText(post.content.rendered).trim().split(/\s+/).filter(Boolean).length;
+const readingMinutes = Math.max(1, Math.ceil(wordCount / 220));
+const formatDate = (date: string) =>
+  new Intl.DateTimeFormat("es-ES", { day: "2-digit", month: "long", year: "numeric" }).format(
+    new Date(date),
+  );
+---
+
+<BaseLayout title={`${title} | Clínica Veterinaria Jara`} description={description} image={image}>
+  <article class="post-page">
+    <header class="post-header section-shell">
+      <div class="post-heading">
+        <a class="post-back" href="/blog/"><span aria-hidden="true">←</span> Cuaderno Jara</a>
+        <p class="post-meta">
+          <time datetime={post.date}>{formatDate(post.date)}</time>
+          {post.isDemo && <span>Contenido de muestra</span>}
+          {category && <span>{category.name}</span>}
+          <span>{readingMinutes} min de lectura</span>
+        </p>
+        <h1>{title}</h1>
+        <p>{description}</p>
+      </div>
+      <figure class="post-hero-media">
+        <img
+          src={image}
+          alt={`Imagen de portada: ${title}`}
+          width="1400"
+          height="900"
+          fetchpriority="high"
+          decoding="async"
+        />
+        <span class="post-hero-accent" aria-hidden="true"></span>
+        <figcaption>Cuaderno clínico · Clínica Veterinaria Jara</figcaption>
+      </figure>
+    </header>
+
+    <div class="post-body section-shell">
+      <aside class="post-aside" aria-label="Información del artículo">
+        <span class="page-kicker">En este artículo</span>
+        <p>{category?.name ?? "Salud y bienestar"}</p>
+        <div class="post-aside-rule" aria-hidden="true"><span></span></div>
+        <a href="/blog/">Ver todas las lecturas <span aria-hidden="true">↗</span></a>
+      </aside>
+      <div class="wp-prose" set:html={safeWordPressHtml(post.content.rendered)} />
+    </div>
+
+    <footer class="post-coda section-shell">
+      <p class="page-kicker">Fin de la lectura</p>
+      <p>La prevención empieza por entender qué necesita cada animal.</p>
+      <a class="blog-read-link" href="/blog/"><span aria-hidden="true">←</span> Volver al cuaderno</a>
+    </footer>
+  </article>
+  <ContactSection />
+</BaseLayout>

@@ -1,0 +1,130 @@
+{
+  "title": "Elige el mundo visual de Clínica Veterinaria Jara",
+  "question": "¿Qué dirección debe convertirse en la nueva web? Puedes elegir una, combinar ideas o pedir otra tirada.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Órbita Jara",
+      "kicker": "THE ROLL",
+      "lineage": "Móvil cinético de color + fotografía clínica real",
+      "thesis": "El carácter del logo madura en capas translúcidas que envuelven el cuidado real.",
+      "palette": ["#F7F8F6", "#111317", "#A8D825", "#FF647B", "#22B8D6", "#FF861E"],
+      "materials": ["acrílico translúcido", "fotografía real", "líneas cromadas"],
+      "viewport": "Titular monumental a la izquierda y un collage clínico orbitado por grandes planos de color a la derecha.",
+      "risk": "Exige contener el recurso orbital para que siga siendo firma y no decoración repetida.",
+      "raised": [
+        {"from": "Jacquard + Lowicz", "raise": "Las capas tienen profundidad física, orden y una secuencia de ensamblaje clara."},
+        {"from": "Detector de partículas", "raise": "Cada línea orbital conecta con un servicio real y nunca existe como adorno vacío."},
+        {"from": "Zine técnico", "raise": "El movimiento explica el recorrido y en reduced-motion queda completo sin animación."}
+      ],
+      "comp": ".impeccable/mocks/decision/orbita-jara.png"
+    },
+    {
+      "id": "model-pick",
+      "label": "Atlas Jara",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "Atlas de historia natural + revista veterinaria europea",
+      "thesis": "La mascota se presenta con la dignidad de un retrato y la precisión de una ficha científica.",
+      "palette": ["#F5F7F4", "#09261D", "#B8E000", "#AEB9B4"],
+      "materials": ["papel mineral", "fotografía documental", "anotaciones finas"],
+      "viewport": "Una imagen vertical domina la mitad izquierda; titular, CTA e índice clínico forman una columna rigurosa a la derecha.",
+      "risk": "Es la opción editorial más segura y puede sentirse menos propia si el logo no se integra con mucha disciplina.",
+      "comp": ".impeccable/mocks/decision/atlas-jara.png"
+    },
+    {
+      "id": "challenger-collider",
+      "label": "Órbita Vital Clara",
+      "verdict": "competitive",
+      "lineage": "Visualización de detector de partículas, traducida a medicina veterinaria",
+      "thesis": "La capacidad diagnóstica se vuelve visible como un sistema de señales alrededor de cada paciente.",
+      "palette": ["#F8FAF9", "#111719", "#BCE900", "#13B7E8", "#FF7768", "#FF9700"],
+      "materials": ["acero clínico", "óptica circular", "trazos de señal"],
+      "viewport": "Titular y contacto ocupan la izquierda; un gran objetivo clínico conecta al paciente con cuatro servicios a la derecha.",
+      "case": "Compite en claridad y sofisticación técnica; queda por detrás en calidez e identificación local.",
+      "risk": "Puede comunicar centro de diagnóstico antes que clínica cercana si la fotografía pierde protagonismo.",
+      "comp": ".impeccable/mocks/decision/orbita-vital.png",
+      "hero": ".impeccable/references/quality-collider-hero.webp",
+      "board": ".impeccable/references/quality-collider.webp"
+    },
+    {
+      "id": "challenger-jacquard",
+      "label": "Tejido de cuidados",
+      "verdict": "declined",
+      "lineage": "Jacquard de instrucciones perforadas",
+      "thesis": "Cada servicio es un hilo que acaba formando el retrato completo del cuidado.",
+      "palette": ["#071C2F", "#E3B84E", "#F1EBDC", "#111418"],
+      "materials": ["seda azul", "hilo metálico", "tarjeta perforada"],
+      "viewport": "Un retrato animal emerge de miles de decisiones tejidas y trazables.",
+      "case": "Pierde identificación y claridad: el tejido no pertenece al ritual real de una clínica.",
+      "kept": "Profundidad material, no decoración plana.",
+      "risk": "La metáfora necesita demasiada explicación antes de llegar a la cita."
+    },
+    {
+      "id": "challenger-lowicz",
+      "label": "Menagerie de papel",
+      "verdict": "declined",
+      "lineage": "Papercut polaco de capas simétricas",
+      "thesis": "Los animales y servicios se construyen capa a capa con el color del logo.",
+      "palette": ["#FFF7E8", "#073A58", "#167D78", "#EE6158", "#F2B333"],
+      "materials": ["papel satinado", "recorte plano", "superposición"],
+      "viewport": "Un gran medallón animal crece por capas mientras la navegación se pega sobre él.",
+      "case": "Pierde claridad clínica y puede parecer una marca infantil o de productos artesanos.",
+      "kept": "Una única regla de capas aplicada con precisión.",
+      "risk": "El sistema compite demasiado con el logotipo y con la fotografía real.",
+      "hero": ".impeccable/references/quality-lowicz-hero.webp"
+    },
+    {
+      "id": "challenger-pushpin",
+      "label": "Cartel de afecto",
+      "verdict": "declined",
+      "lineage": "Push Pin Studios y contorno nouveau",
+      "thesis": "Cada servicio se convierte en un cartel ilustrado de vínculo entre persona y animal.",
+      "palette": ["#FFF7E6", "#F48D35", "#F05C87", "#35A5A0", "#4C204D"],
+      "materials": ["tinta plana", "papel de cartel", "contorno ilustrado"],
+      "viewport": "Una silueta animal monumental sostiene un titular de cartel y pequeños servicios orbitan alrededor.",
+      "case": "La calidez funciona, pero el código retro rebaja la percepción de medicina avanzada.",
+      "kept": "Compromiso total con una paleta, sin acentos tímidos.",
+      "risk": "Puede parecer una campaña temporal en vez de un sistema clínico duradero.",
+      "hero": ".impeccable/references/quality-pushpin-hero.webp"
+    },
+    {
+      "id": "challenger-pulp",
+      "label": "Trayectoria pulp",
+      "verdict": "declined",
+      "lineage": "Lámina interior de revista pulp",
+      "thesis": "La visita avanza como una trayectoria diagonal hacia un destino seguro.",
+      "palette": ["#16304D", "#B94232", "#D6D0C1", "#1A1B1D"],
+      "materials": ["papel pulpa", "cromo aerografiado", "líneas de velocidad"],
+      "viewport": "Un paciente cruza el hero en diagonal con servicios alineados sobre su recorrido.",
+      "case": "Pierde ambas dimensiones: aventura espacial y medicina veterinaria no comparten escena cultural.",
+      "kept": "Una trayectoria dominante que ordena el primer viewport.",
+      "risk": "La ficción eclipsa la confianza y la cercanía."
+    },
+    {
+      "id": "challenger-zine",
+      "label": "Zine que acompaña",
+      "verdict": "declined",
+      "lineage": "Manual técnico dibujado por una persona cercana",
+      "thesis": "La clínica explica cada paso con flechas, notas y pequeñas demostraciones dibujadas.",
+      "palette": ["#FAF8EF", "#171717", "#F2DF3A", "#F06B8B", "#35B7B0"],
+      "materials": ["rotulador", "subrayador", "papel mate"],
+      "viewport": "Un recorrido numerado enseña qué ocurre desde la cita hasta el diagnóstico.",
+      "case": "La comprensión es fuerte, pero el acabado zine no alcanza la elegancia premium pedida.",
+      "kept": "Toda animación debe explicar un paso y funcionar ya dibujada sin movimiento.",
+      "risk": "Puede parecer educativo o juvenil antes que clínico."
+    }
+  ],
+  "reroll": {"registers": ["safer", "bolder"]},
+  "buildPath": {"value": "comp", "toggle": true},
+  "canon": true,
+  "canonCard": {
+    "label": "El estándar del sector",
+    "thesis": "La web veterinaria moderna esperable, ejecutada con oficio y sin sorpresa.",
+    "palette": ["#FFFFFF", "#123E2B", "#07944D", "#EEF2EF"],
+    "materials": ["rejilla limpia", "fotografía amable", "tarjetas suaves"],
+    "viewport": "Hero dividido, foto de veterinaria con mascota, doble CTA y cuatro servicios debajo.",
+    "risk": "Es inmediatamente comprensible y también indistinguible de muchas clínicas.",
+    "comp": ".impeccable/mocks/decision/canon.png"
+  },
+  "steer": true
+}

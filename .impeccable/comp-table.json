@@ -1,0 +1,41 @@
+{
+  "title": "Elige la composición de Órbita Jara",
+  "question": "La identidad ya está fijada. Elige la estructura que debe gobernar la home, o indica qué combinarías.",
+  "options": [
+    {
+      "id": "orbita-a",
+      "label": "A — Collage orbital",
+      "kicker": "DIRECTION COMP",
+      "lineage": "Órbita Jara · composición modular",
+      "thesis": "La clínica aparece como un sistema vivo de espacios conectados alrededor del paciente.",
+      "palette": ["#F7F8F6", "#111317", "#A8D825", "#FF647B", "#22B8D6", "#FF861E"],
+      "materials": ["acrílico translúcido", "collage fotográfico", "líneas cromadas"],
+      "viewport": "Texto monumental a la izquierda y cuatro ventanas clínicas orbitadas a la derecha.",
+      "risk": "Es la opción más rica, pero exige una adaptación móvil muy cuidada para conservar jerarquía.",
+      "comp": ".impeccable/mocks/orbita-jara-a.png"
+    },
+    {
+      "id": "orbita-b",
+      "label": "B — Cinta cinética",
+      "lineage": "Órbita Jara · recorrido horizontal",
+      "thesis": "Una sola cinta fotográfica conduce del cuidado cotidiano a la capacidad clínica.",
+      "palette": ["#F7F8F6", "#111317", "#A8D825", "#FF647B", "#22B8D6", "#FF861E"],
+      "materials": ["cinta fotográfica", "seams acrílicos", "trazas de servicio"],
+      "viewport": "El titular ocupa la izquierda y una gran S fotográfica recorre el centro y la derecha.",
+      "risk": "La composición es memorable, aunque la cinta requiere ingeniería responsive precisa.",
+      "comp": ".impeccable/mocks/orbita-jara-b.png"
+    },
+    {
+      "id": "orbita-c",
+      "label": "C — Portal clínico",
+      "lineage": "Órbita Jara · retrato central",
+      "thesis": "El paciente es el centro físico de la página y todo el sistema se ordena alrededor.",
+      "palette": ["#F7F8F6", "#111317", "#A8D825", "#FF647B", "#22B8D6", "#FF861E"],
+      "materials": ["portal fotográfico", "capas acrílicas", "índice editorial"],
+      "viewport": "Gran retrato escultórico en el centro, tipografía arquitectónica a la izquierda e índice a la derecha.",
+      "risk": "Es la más clara y adaptable, pero algo menos narrativa que el collage y la cinta.",
+      "comp": ".impeccable/mocks/orbita-jara-c.png"
+    }
+  ],
+  "steer": true
+}

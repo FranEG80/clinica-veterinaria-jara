@@ -1,0 +1,17 @@
+{
+  "seedKey": "1bfbbe43",
+  "selected": {
+    "id": "assigned",
+    "label": "Órbita Jara",
+    "comp": ".impeccable/mocks/decision/orbita-jara.png",
+    "selectedVia": "user chat approval"
+  },
+  "preservedAlternate": {
+    "id": "model-pick",
+    "label": "Atlas Jara",
+    "comp": ".impeccable/alternates/atlas-jara/atlas-jara.png",
+    "prompt": ".impeccable/alternates/atlas-jara/atlas-jara.prompt.txt",
+    "status": "saved for possible future switch"
+  },
+  "buildPath": "comp"
+}

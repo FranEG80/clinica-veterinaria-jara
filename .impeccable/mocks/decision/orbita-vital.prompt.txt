@@ -1,0 +1,14 @@
+Use case: precise-object-edit
+Asset type: existing high-fidelity veterinary website homepage comp
+Input images: Image 1 is the edit target.
+Primary request: convert the entire dark navigation and dark hero region into a premium light theme while preserving the exact composition and diagnostic-orbit concept.
+
+Change only the palette/material treatment of the navigation and hero:
+- background becomes cold mineral white / very pale silver with a faint paper-fine grain;
+- headline and body text become deep near-black/forest ink;
+- concentric rings and technical linework become visible soft steel gray and pale blue-gray, with enough contrast on white;
+- keep chartreuse as the primary CTA and active-signal accent, with cyan, coral and orange service tracks;
+- remove all black/dark atmospheric fill from the hero;
+- keep the bottom section light and harmonious.
+
+Invariants: preserve the exact logo, navigation structure, layout, headline wording, contact numbers, CTA, circular pet photograph, four service labels, clinic photo strip, spacing, dimensions and hierarchy. Do not move or redesign elements. Keep an Awwwards-level premium clinical finish, not sterile or washed out. No gradients, no extra elements, no extra text, no watermark.

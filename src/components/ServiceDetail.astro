@@ -1,0 +1,167 @@
+---
+import ContactSection from "./ContactSection.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import {
+  getClinicContent,
+  mediaUrl,
+  safeWordPressHtml,
+  services,
+  type Service,
+} from "../lib/wordpress";
+
+type Props = {
+  service: Service;
+  canonicalPath?: string;
+  noIndex?: boolean;
+};
+
+const { service, canonicalPath = `/${service.slug}/`, noIndex = false } = Astro.props;
+const content = await getClinicContent();
+const image = mediaUrl(content, service.mediaSlug, service.mediaSlug);
+const wordpressPage = content.pageBySlug.get(service.slug);
+const wordpressHtml = safeWordPressHtml(wordpressPage?.content.rendered ?? "");
+const hasWordPressContent = Boolean(wordpressHtml.trim());
+const galleryImages = service.gallerySlugs
+  .map((slug) => mediaUrl(content, slug, slug))
+  .filter((value): value is string => Boolean(value));
+const serviceIndex = services.findIndex((item) => item.slug === service.slug);
+const nextService = services[(serviceIndex + 1) % services.length];
+const description = `${service.summary} Clínica Veterinaria Jara en Villanueva de Córdoba.`;
+---
+
+<BaseLayout
+  title={`${service.title} | Clínica Veterinaria Jara`}
+  description={description}
+  image={image}
+  canonicalPath={canonicalPath}
+  noIndex={noIndex}
+>
+  <article class="service-page" data-accent={service.accent}>
+    <header class="service-page-hero">
+      <div class="service-page-copy">
+        <p class="service-page-index">Servicio {String(serviceIndex + 1).padStart(2, "0")}</p>
+        <h1 class="service-page-title">{service.title}</h1>
+        <p>{service.summary}</p>
+        <div class="service-page-actions">
+          <a class="button button-primary" href="tel:+34957120563">Pedir cita</a>
+          <a class="button button-secondary tabular" href="tel:+34659967706">
+            Urgencias 659 967 706
+          </a>
+        </div>
+      </div>
+
+      <figure class="service-page-media">
+        <img
+          src={image}
+          alt={`${service.title} en Clínica Veterinaria Jara`}
+          width="1200"
+          height="900"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
+        <span class="service-page-acrylic" aria-hidden="true"></span>
+      </figure>
+    </header>
+
+    <section class="service-page-body section-shell" aria-labelledby="service-body-title">
+      <div>
+        <p class="service-page-index">Cuidado Jara</p>
+        <h2 id="service-body-title">Precisión con cercanía.</h2>
+      </div>
+      <div class="service-page-body-copy">
+        {hasWordPressContent ? (
+          <div class="service-wp-content" set:html={wordpressHtml} />
+        ) : (
+          <div class="service-wp-content">
+            <div class="service-fallback-gallery" aria-label={`Imágenes de ${service.title}`}>
+              {galleryImages.map((galleryImage, index) => (
+                <button
+                  class="service-detail-gallery-button"
+                  type="button"
+                  data-detail-lightbox-source={galleryImage}
+                  data-detail-lightbox-alt={`${service.title}, imagen ${index + 1}`}
+                  aria-label={`Ampliar imagen ${index + 1} de ${service.title}`}
+                >
+                  <img
+                    src={galleryImage}
+                    alt=""
+                    width="800"
+                    height="600"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+              ))}
+            </div>
+            <p>{service.detail}</p>
+            <p>
+              Cada paciente se valora de forma individual. El equipo explica las opciones y el
+              seguimiento para que pueda decidir con información clara en cada etapa.
+            </p>
+          </div>
+        )}
+
+        <a class="service-next" href={`/${nextService.slug}/`}>
+          <span>Siguiente servicio</span>
+          <strong>{nextService.shortTitle}</strong>
+        </a>
+      </div>
+    </section>
+  </article>
+  <dialog class="image-modal" data-service-detail-modal aria-labelledby="service-detail-modal-title">
+    <form method="dialog" class="image-modal-close-form">
+      <button class="image-modal-close" type="submit" aria-label="Cerrar imagen">
+        <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+          <path d="m4 4 12 12M16 4 4 16" fill="none" stroke="currentColor" stroke-width="1.5" />
+        </svg>
+      </button>
+    </form>
+    <div class="image-modal-inner">
+      <p id="service-detail-modal-title" class="sr-only">Imagen ampliada del servicio</p>
+      <img data-detail-modal-image src="" alt="" width="1200" height="900" />
+      <p data-detail-modal-caption></p>
+    </div>
+  </dialog>
+  <ContactSection />
+</BaseLayout>
+
+<script>
+  const detailModal = document.querySelector<HTMLDialogElement>("[data-service-detail-modal]");
+  const detailModalImage = detailModal?.querySelector<HTMLImageElement>("[data-detail-modal-image]");
+  const detailModalCaption = detailModal?.querySelector<HTMLElement>("[data-detail-modal-caption]");
+  const detailGallery = document.querySelector<HTMLElement>(".service-wp-content");
+
+  if (detailModal && detailModalImage && detailModalCaption && detailGallery) {
+    const openDetailImage = (source: string, alt: string) => {
+      detailModalImage.src = source;
+      detailModalImage.alt = alt;
+      detailModalCaption.textContent = alt;
+      if (typeof detailModal.showModal === "function") detailModal.showModal();
+      else detailModal.setAttribute("open", "");
+    };
+
+    detailGallery.querySelectorAll<HTMLAnchorElement>("a").forEach((link) => {
+      const image = link.querySelector<HTMLImageElement>("img");
+      if (!image) return;
+
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        openDetailImage(link.href, image.alt || "Imagen ampliada del servicio");
+      });
+    });
+
+    detailGallery.querySelectorAll<HTMLButtonElement>("[data-detail-lightbox-source]").forEach((button) => {
+      button.addEventListener("click", () => {
+        openDetailImage(
+          button.dataset.detailLightboxSource ?? "",
+          button.dataset.detailLightboxAlt ?? "Imagen ampliada del servicio",
+        );
+      });
+    });
+
+    detailModal.addEventListener("click", (event) => {
+      if (event.target === detailModal) detailModal.close();
+    });
+  }
+</script>

@@ -1,0 +1,38 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import ServiceExplorer from "../components/ServiceExplorer.astro";
+import ContactSection from "../components/ContactSection.astro";
+import { getClinicContent, mediaUrl, services } from "../lib/wordpress";
+
+const content = await getClinicContent();
+const heroImage = mediaUrl(content, "quirofano");
+const serviceViews = services.map((service) => ({
+  ...service,
+  image: mediaUrl(content, service.mediaSlug, service.mediaSlug),
+  gallery: service.gallerySlugs
+    .map((slug) => mediaUrl(content, slug, slug))
+    .filter((value): value is string => Boolean(value)),
+}));
+---
+
+<BaseLayout
+  title="Servicios veterinarios | Clínica Veterinaria Jara"
+  description="Cirugía, diagnóstico por imagen, hospitalización, medicina interna, laboratorio, odontología, vacunación y peluquería."
+  image={heroImage}
+>
+  <PageHero
+    label="Servicios"
+    title="Capacidad clínica para cuidar mejor."
+    intro="Prevención, diagnóstico y tratamiento coordinados en un mismo centro veterinario."
+    image={heroImage}
+    imageAlt="Quirófano de Clínica Veterinaria Jara"
+    accent="lime"
+  />
+  <ServiceExplorer items={serviceViews} showHeading={false} />
+  <aside class="urgent-band" aria-label="Urgencias veterinarias">
+    <p>¿Necesita atención urgente?</p>
+    <a class="tabular" href="tel:+34659967706">659 967 706</a>
+  </aside>
+  <ContactSection />
+</BaseLayout>

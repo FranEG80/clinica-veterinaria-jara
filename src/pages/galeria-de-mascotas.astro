@@ -1,0 +1,56 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import ContactSection from "../components/ContactSection.astro";
+import { fallbackMedia, getClinicContent, mediaUrl } from "../lib/wordpress";
+
+const content = await getClinicContent();
+const gallery = content.media
+  .filter((item) => /^home_vet_gallery\d*$/.test(item.slug))
+  .sort((a, b) => a.id - b.id)
+  .map((item) => ({
+    src: item.source_url,
+    alt: item.alt_text || "Mascota de una familia de Clínica Veterinaria Jara",
+  }));
+
+const images = gallery.length
+  ? gallery
+  : [
+      { src: fallbackMedia.hero, alt: "Paciente de Clínica Veterinaria Jara" },
+      { src: fallbackMedia.consulta, alt: "Consulta veterinaria" },
+      { src: fallbackMedia["sala-de-espera"], alt: "Sala de espera de la clínica" },
+    ];
+const heroImage = images[0]?.src ?? mediaUrl(content, "clinica-veterinaria-jara-quienes-somos", "hero");
+---
+
+<BaseLayout
+  title="Galería de mascotas | Clínica Veterinaria Jara"
+  description="Algunos de los pacientes que forman parte del mundo de Clínica Veterinaria Jara."
+  image={heroImage}
+>
+  <PageHero
+    label="Galería"
+    title="Ellos son el centro de todo."
+    intro="Una pequeña ventana a las mascotas y familias que dan sentido a nuestro trabajo."
+    image={heroImage}
+    imageAlt="Mascota de Clínica Veterinaria Jara"
+    accent="coral"
+  />
+
+  <section class="gallery-section section-shell" aria-label="Galería de mascotas">
+    {images.map((item, index) => (
+      <figure class:list={["gallery-item", `gallery-item-${(index % 5) + 1}`]}>
+        <img
+          src={item.src}
+          alt={item.alt}
+          width="800"
+          height="600"
+          loading={index < 3 ? "eager" : "lazy"}
+          decoding="async"
+        />
+        <figcaption class="tabular">JARA · {String(index + 1).padStart(2, "0")}</figcaption>
+      </figure>
+    ))}
+  </section>
+  <ContactSection />
+</BaseLayout>

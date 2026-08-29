@@ -1,0 +1,16 @@
+Use case: ui-mockup
+Asset type: high-fidelity desktop homepage design comp, 16:10 landscape, for Clínica Veterinaria Jara.
+Input images: logo-jara.png is the exact existing brand logo; consulta.jpg, sala-espera.jpg, clinica-equipo.jpg and quirofano.jpg are real clinic photography/content references.
+
+Primary request: show the category-standard modern veterinary clinic homepage, executed impeccably but deliberately familiar. This is the safe canon comparison in a design decision table, not the recommended artistic direction. It must look like a practical polished website screenshot.
+
+Page structure:
+1) White single-line navigation with exact logo at left; "Clínica", "Servicios", "Equipo", "Contacto"; solid green "PEDIR CITA" button right.
+2) Familiar split hero: left half has small line "CLÍNICA VETERINARIA EN VILLANUEVA DE CÓRDOBA", headline "Cuidamos de quienes más quieres.", short paragraph, green primary CTA "PEDIR CITA", outlined "URGENCIAS 659 967 706". Right half has a large softly rounded photograph of a veterinarian examining a dog or cat.
+3) Directly below, a neat four-column service overview using real clinical photography and labels "Cirugía", "Diagnóstico por imagen", "Hospitalización", "Medicina interna".
+4) Show the start of an about section using a real clinic interior and the heading "Cerca de ti desde 2015."
+
+Visual direction: the polished category norm: bright white, deep green, soft light gray, one restrained lime derived from the logo. Friendly contemporary sans typography, readable, soft 16px radii, subtle shadows only where hierarchy needs them, spacious grid, professional stock-photography framing. Warm and trustworthy but intentionally conventional.
+
+Exact text: "CLÍNICA VETERINARIA EN VILLANUEVA DE CÓRDOBA", "Cuidamos de quienes más quieres.", "Medicina avanzada y un equipo cercano para acompañarles en cada etapa.", "PEDIR CITA", "URGENCIAS 659 967 706", "Cirugía", "Diagnóstico por imagen", "Hospitalización", "Medicina interna", "Cerca de ti desde 2015."
+Constraints: Spanish only; preserve supplied logo; no invented testimonials, ratings, awards, hours, staff names or statistics; no purple-blue gradients; no paw-print decoration; no excessive cards; no watermark; clear CTA and strong accessibility.

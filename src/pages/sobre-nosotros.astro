@@ -1,0 +1,61 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import ClinicStory from "../components/ClinicStory.astro";
+import TeamRail from "../components/TeamRail.astro";
+import ContactSection from "../components/ContactSection.astro";
+import { getClinicContent, mediaUrl } from "../lib/wordpress";
+import { teamProfiles } from "../lib/site";
+
+const content = await getClinicContent();
+const heroImage = mediaUrl(content, "nosotros", "nosotros");
+const clinicImage = mediaUrl(content, "sala-de-espera");
+const team = teamProfiles.map((member) => ({
+  ...member,
+  image: mediaUrl(content, member.mediaSlug, member.fallbackKey),
+}));
+---
+
+<BaseLayout
+  title="La clínica | Clínica Veterinaria Jara"
+  description="Conoce la historia, las instalaciones y el equipo de Clínica Veterinaria Jara en Villanueva de Córdoba."
+  image={heroImage}
+>
+  <PageHero
+    label="La clínica"
+    title="Ciencia que cuida. Personas que acompañan."
+    intro="Desde 2015 unimos medicina veterinaria, tecnología y una relación cercana con cada familia."
+    image={heroImage}
+    imageAlt="Equipo de Clínica Veterinaria Jara"
+    accent="coral"
+  />
+
+  <ClinicStory clinicImage={clinicImage} showHeading={false} />
+
+  <section class="principles-section section-shell" aria-labelledby="principles-title">
+    <div class="principles-heading">
+      <p class="page-kicker">Nuestra forma de trabajar</p>
+      <h2 id="principles-title">Entender primero. Explicar siempre.</h2>
+    </div>
+    <div class="principles-list">
+      <article>
+        <span class="tabular">01</span>
+        <h3>Escucha clínica</h3>
+        <p>Cada caso empieza por conocer al paciente, su historia y lo que preocupa a su familia.</p>
+      </article>
+      <article>
+        <span class="tabular">02</span>
+        <h3>Decisiones claras</h3>
+        <p>Explicamos las pruebas, las alternativas y el seguimiento con lenguaje comprensible.</p>
+      </article>
+      <article>
+        <span class="tabular">03</span>
+        <h3>Cuidado continuo</h3>
+        <p>La atención no termina en consulta: acompañamos la evolución y cada nueva etapa.</p>
+      </article>
+    </div>
+  </section>
+
+  <TeamRail members={team} />
+  <ContactSection />
+</BaseLayout>

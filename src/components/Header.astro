@@ -1,0 +1,47 @@
+---
+const { currentPath = "/" } = Astro.props;
+
+const links = [
+  { href: "/sobre-nosotros/", label: "Clínica" },
+  { href: "/nuestros-servicios/", label: "Servicios" },
+  { href: "/equipo/", label: "Equipo" },
+  { href: "/blog/", label: "Blog" },
+  { href: "/contacto/", label: "Contacto" },
+];
+---
+
+<header class="site-header" data-site-header>
+  <a class="brand-link" href="/" aria-label="Clínica Veterinaria Jara, inicio">
+    <img
+      src="/assets/logo-jara.png"
+      alt="Clínica Veterinaria Jara"
+      width="200"
+      height="90"
+      decoding="async"
+    />
+  </a>
+
+  <nav class="desktop-nav" aria-label="Navegación principal">
+    {links.map((link) => (
+      <a href={link.href} aria-current={currentPath === link.href ? "page" : undefined}>
+        {link.label}
+      </a>
+    ))}
+  </nav>
+
+  <a class="header-contact" href="tel:+34957120563">
+    <span>Pedir cita</span>
+    <span class="tabular">957 120 563</span>
+  </a>
+
+  <details class="mobile-nav">
+    <summary>
+      <span class="menu-lines" aria-hidden="true"><i></i><i></i></span>
+      <span class="sr-only">Abrir menú</span>
+    </summary>
+    <nav aria-label="Navegación móvil">
+      {links.map((link) => <a href={link.href}>{link.label}</a>)}
+      <a class="mobile-contact" href="tel:+34957120563">Pedir cita · 957 120 563</a>
+    </nav>
+  </details>
+</header>

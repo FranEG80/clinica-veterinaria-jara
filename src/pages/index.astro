@@ -1,0 +1,173 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HeroOrbit from "../components/HeroOrbit.astro";
+import ClinicStory from "../components/ClinicStory.astro";
+import ServiceExplorer from "../components/ServiceExplorer.astro";
+import TeamRail from "../components/TeamRail.astro";
+import ContactSection from "../components/ContactSection.astro";
+import {
+  fallbackMedia,
+  getClinicContent,
+  mediaUrl,
+  services,
+} from "../lib/wordpress";
+import { teamProfiles } from "../lib/site";
+
+const content = await getClinicContent();
+
+const heroImage = mediaUrl(content, "peluqueria", "peluqueria");
+const consultationImage = mediaUrl(content, "consulta");
+const clinicImage = mediaUrl(content, "nosotros", "nosotros");
+const waitingRoomImage = mediaUrl(content, "sala-de-espera");
+const surgeryImage = mediaUrl(content, "quirofano");
+
+const serviceViews = services.map((service) => ({
+  ...service,
+  image: mediaUrl(content, service.mediaSlug, service.mediaSlug),
+  gallery: service.gallerySlugs
+    .map((slug) => mediaUrl(content, slug, slug))
+    .filter((value): value is string => Boolean(value)),
+}));
+
+const team = teamProfiles.map((member) => ({
+  ...member,
+  image: mediaUrl(content, member.mediaSlug, member.fallbackKey),
+}));
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "VeterinaryCare",
+  name: "Clínica Veterinaria Jara",
+  url: "https://veterinariajara.es/",
+  image: heroImage ?? fallbackMedia.hero,
+  email: "contacto@clinicaveterinariajara.es",
+  telephone: "+34 957 120 563",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Calle Olivareros, 7",
+    postalCode: "14440",
+    addressLocality: "Villanueva de Córdoba",
+    addressRegion: "Córdoba",
+    addressCountry: "ES",
+  },
+};
+---
+
+<BaseLayout image={heroImage}>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+  <HeroOrbit
+    heroImage={heroImage}
+    consultationImage={consultationImage}
+    waitingRoomImage={waitingRoomImage}
+    surgeryImage={surgeryImage}
+    featuredServices={services.slice(0, 4)}
+  />
+
+  <ClinicStory
+    clinicImage={clinicImage}
+    clinicImageAlt="Equipo de Clínica Veterinaria Jara junto a sus pacientes"
+    ctaHref="/sobre-nosotros/"
+    ctaLabel="Conócenos"
+  />
+  <ServiceExplorer items={serviceViews} />
+  <TeamRail members={team} />
+  <ContactSection />
+</BaseLayout>
+
+<script>
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+  const hero = document.querySelector<HTMLElement>("[data-orbit-hero]");
+  if (hero && !reduceMotion.matches) {
+    let frame = 0;
+    let pointerX = 0;
+    let pointerY = 0;
+
+    const paintPointer = () => {
+      hero.style.setProperty("--pointer-x", pointerX.toFixed(3));
+      hero.style.setProperty("--pointer-y", pointerY.toFixed(3));
+      frame = 0;
+    };
+
+    if (finePointer.matches) {
+      hero.addEventListener("pointermove", (event) => {
+        const bounds = hero.getBoundingClientRect();
+        pointerX = (event.clientX - bounds.left) / bounds.width - 0.5;
+        pointerY = (event.clientY - bounds.top) / bounds.height - 0.5;
+        if (!frame) frame = requestAnimationFrame(paintPointer);
+      });
+
+      hero.addEventListener("pointerleave", () => {
+        pointerX = 0;
+        pointerY = 0;
+        if (!frame) frame = requestAnimationFrame(paintPointer);
+      });
+    }
+
+    let scrollFrame = 0;
+    const paintScroll = () => {
+      const progress = Math.min(1, Math.max(0, window.scrollY / window.innerHeight));
+      hero.style.setProperty("--hero-scroll", progress.toFixed(3));
+      scrollFrame = 0;
+    };
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (!scrollFrame) scrollFrame = requestAnimationFrame(paintScroll);
+      },
+      { passive: true },
+    );
+  }
+
+  const serviceExplorer = document.querySelector<HTMLElement>("[data-service-explorer]");
+  if (serviceExplorer) {
+    const rows = [...serviceExplorer.querySelectorAll<HTMLElement>("[data-service-item]")];
+    const preview = serviceExplorer.querySelector<HTMLElement>("[data-service-preview]");
+    const image = serviceExplorer.querySelector<HTMLImageElement>("[data-service-image]");
+    const title = serviceExplorer.querySelector<HTMLElement>("[data-service-title]");
+    const summary = serviceExplorer.querySelector<HTMLElement>("[data-service-summary]");
+    let active = rows[0];
+    let transitionTimer = 0;
+
+    const selectService = (row: HTMLElement) => {
+      if (row === active || !preview || !image || !title || !summary) return;
+      active = row;
+      rows.forEach((item) => item.classList.toggle("is-active", item === row));
+      preview.classList.add("is-changing");
+      window.clearTimeout(transitionTimer);
+      transitionTimer = window.setTimeout(() => {
+        const nextTitle = row.dataset.title ?? "Servicio veterinario";
+        image.src = row.dataset.image ?? image.src;
+        image.alt = `${nextTitle} en Clínica Veterinaria Jara`;
+        title.textContent = nextTitle;
+        summary.textContent = row.dataset.summary ?? "";
+        preview.dataset.accent = row.dataset.accent ?? "lime";
+        requestAnimationFrame(() => preview.classList.remove("is-changing"));
+      }, 110);
+    };
+
+    rows.forEach((row) => {
+      row.addEventListener("pointerenter", () => selectService(row));
+      row.addEventListener("focus", () => selectService(row));
+    });
+  }
+
+  const revealBlocks = [...document.querySelectorAll<HTMLElement>(".reveal-block")];
+  if (revealBlocks.length && !reduceMotion.matches && "IntersectionObserver" in window) {
+    document.documentElement.classList.add("motion-ready");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            (entry.target as HTMLElement).classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.12 },
+    );
+    revealBlocks.forEach((block) => observer.observe(block));
+  }
+</script>

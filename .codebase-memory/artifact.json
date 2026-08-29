@@ -1,0 +1,11 @@
+{
+    "schema_version": 2,
+    "commit": "",
+    "indexed_at": "2026-08-29T11:53:35Z",
+    "project": "cliinica-veterinaria",
+    "nodes": 316,
+    "edges": 397,
+    "original_size": 1900544,
+    "compressed_size": 79026,
+    "compression_level": 3
+}

@@ -1,0 +1,25 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import ContactSection from "../components/ContactSection.astro";
+import { getClinicContent, mediaUrl } from "../lib/wordpress";
+
+const content = await getClinicContent();
+const heroImage = mediaUrl(content, "consulta");
+---
+
+<BaseLayout
+  title="Contacto y citas | Clínica Veterinaria Jara"
+  description="Pide cita o contacta con Clínica Veterinaria Jara en C/ Olivareros, 7, Villanueva de Córdoba."
+  image={heroImage}
+>
+  <PageHero
+    label="Contacto"
+    title="Estamos cerca cuando nos necesite."
+    intro="Citas, consultas y un teléfono específico para urgencias veterinarias."
+    image={heroImage}
+    imageAlt="Consulta de Clínica Veterinaria Jara"
+    accent="orange"
+  />
+  <ContactSection />
+</BaseLayout>

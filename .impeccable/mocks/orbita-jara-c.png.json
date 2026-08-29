@@ -1,0 +1,6 @@
+{
+  "approved": false,
+  "promptFile": ".impeccable/mocks/orbita-jara-c.prompt.txt",
+  "generator": "built-in imagegen",
+  "role": "composition option C"
+}

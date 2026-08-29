@@ -1,0 +1,33 @@
+---
+type Props = {
+  title: string;
+  intro: string;
+  label: string;
+  image: string;
+  imageAlt: string;
+  accent?: "lime" | "coral" | "cyan" | "orange";
+};
+
+const { title, intro, label, image, imageAlt, accent = "lime" } = Astro.props;
+---
+
+<header class="page-hero" data-accent={accent}>
+  <div class="page-hero-copy">
+    <p class="page-kicker">{label}</p>
+    <h1>{title}</h1>
+    <p class="page-intro">{intro}</p>
+  </div>
+
+  <figure class="page-hero-media">
+    <img
+      src={image}
+      alt={imageAlt}
+      width="1200"
+      height="900"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+    />
+    <span class="page-hero-field" aria-hidden="true"></span>
+  </figure>
+</header>

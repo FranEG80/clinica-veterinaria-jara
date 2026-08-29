@@ -1,0 +1,6 @@
+{
+  "approved": false,
+  "promptFile": ".impeccable/mocks/decision/orbita-vital.prompt.txt",
+  "generator": "built-in imagegen",
+  "note": "Final light-theme edit prompt; parent comp was generated in this session."
+}

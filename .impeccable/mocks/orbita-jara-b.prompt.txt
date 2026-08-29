@@ -1,0 +1,18 @@
+Use case: ui-mockup
+Asset type: composition option B for a high-fidelity desktop homepage, 16:10 landscape, Clínica Veterinaria Jara.
+Input images: orbita-jara.png is the approved visual-world reference and must carry over its cold-white ground, near-black wide display type, translucent acrylic lime/coral/cyan/orange planes, chrome hairlines, real-clinic photography and premium Awwwards-level finish. logo-jara.png is the exact logo. consulta.jpg, sala-espera.jpg and quirofano.jpg are real clinic content. Do not copy the approved comp's layout; keep its identity and materials while testing a different topology.
+
+Primary request: create a shippable website screenshot for the same "Órbita Jara" world using a cinematic horizontal-ribbon composition.
+
+Page structure:
+1) Single-line 72px navigation, exact logo left; "Clínica", "Servicios", "Equipo", "Contacto"; compact contact action right.
+2) The hero remains entirely above the fold. At the upper left, a large two-line headline "SU SALUD. / SU MUNDO." uses roughly 38% of width. Directly below: "Medicina veterinaria avanzada con el cuidado cercano de siempre.", CTA "PEDIR CITA", and "URGENCIAS 659 967 706".
+3) One dominant photographic ribbon sweeps horizontally in a broad S-curve across the middle and right two-thirds of the viewport. It contains a large pet-being-cared-for image and three real clinic-image segments, separated by translucent acrylic color seams in lime, coral, cyan and tangerine. The ribbon must feel architectural and editorial, not like a carousel.
+4) Four service labels sit at measured points along that path: "CIRUGÍA", "DIAGNÓSTICO", "HOSPITALIZACIÓN", "MEDICINA INTERNA". Thin chrome traces connect them to the relevant image segment.
+5) At the bottom edge, begin a quiet black-on-white section with the heading "Todo lo que necesitan. En un mismo lugar."
+
+Visual direction and invariants: same exact Órbita Jara identity; cold mineral white, near-black typography, large translucent acrylic fields, chrome hairlines, real photography, 14px image corners, no cards in hero. Use one dominant move only: the horizontal ribbon. Keep the logo's playful color as a sophisticated material system, never childish. Awwwards-level editorial composition with practical navigation and visible CTAs.
+
+Motion implied: the ribbon can scrub gently with scroll and seams can drift by a few pixels; no motion blur.
+Exact text: "SU SALUD. SU MUNDO.", "Medicina veterinaria avanzada con el cuidado cercano de siempre.", "PEDIR CITA", "URGENCIAS 659 967 706", "CIRUGÍA", "DIAGNÓSTICO", "HOSPITALIZACIÓN", "MEDICINA INTERNA", "Todo lo que necesitan. En un mismo lugar."
+Constraints: Spanish only; preserve exact logo; no fabricated testimonials, ratings, awards, hours, staff names or statistics; no generic card grid; no purple-blue gradient; no paw prints; no excessive rounded pills; no dark hero; no watermark; clear text and WCAG-conscious contrast.

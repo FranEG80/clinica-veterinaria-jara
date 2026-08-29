@@ -1,0 +1,18 @@
+Use case: ui-mockup
+Asset type: high-fidelity desktop homepage design comp, 16:10 landscape, for Clínica Veterinaria Jara.
+Input images: logo-jara.png is the exact existing brand logo to place small in the navigation; consulta.jpg, sala-espera.jpg, clinica-equipo.jpg and quirofano.jpg are real clinic photography/content references only. Keep the clinic identity and photographic subject matter, but create a polished web composition rather than editing a single photo.
+
+Primary request: design a shippable, award-level Astro website homepage comp for a real Spanish veterinary clinic. This must unmistakably read as a premium website screenshot, not a poster or mood board.
+
+Page structure in order:
+1) Single-line 72px navigation with the exact logo at top left, links "Clínica", "Servicios", "Equipo", "Contacto", and a compact outlined contact action at top right.
+2) Initial viewport split asymmetrically: left 46% has small location text "VILLANUEVA DE CÓRDOBA", a huge two-line headline "SU SALUD. / SU MUNDO.", a concise sentence "Medicina veterinaria avanzada con el cuidado cercano de siempre.", primary CTA "PEDIR CITA" and secondary emergency phone "URGENCIAS 659 967 706". Right 54% is a dramatic editorial collage of a real cat or dog in care and clinic photography, cropped at architectural scale.
+3) Across and behind the hero, a few large translucent acrylic color planes and curved orbital seams inspired by the logo colors, never childish: lime, coral, cyan and tangerine on cold white and near-black. One dominant move only: the colored layers orbit and overlap the photographic subject.
+4) At the bottom edge show the beginning of the next section with a horizontal service index: "CIRUGÍA", "DIAGNÓSTICO", "HOSPITALIZACIÓN", "MEDICINA INTERNA".
+
+Visual direction: "Órbita Jara". Contemporary European cultural institution meets premium animal healthcare. Cold white ground, near-black typography, restrained chrome/silver details, color committed in large translucent acrylic fields rather than scattered badges. Wide neo-grotesk display typography with strong horizontal rhythm, practical clean sans body. Crisp square-to-soft 14px corner language, hairline dividers, no card grid in the hero. Realistic product UI, sophisticated editorial art direction, Awwwards-level composition, generous but purposeful whitespace.
+
+Motion implied in the still: orbital seams and translucent panels appear ready to drift with scroll; image masks overlap. Do not show motion blur.
+
+Exact text: "SU SALUD. SU MUNDO.", "Medicina veterinaria avanzada con el cuidado cercano de siempre.", "PEDIR CITA", "URGENCIAS 659 967 706", "CIRUGÍA", "DIAGNÓSTICO", "HOSPITALIZACIÓN", "MEDICINA INTERNA".
+Constraints: Spanish only; use the supplied logo without redesigning it; no fabricated testimonials, awards, ratings, opening hours, staff names or statistics; no generic three-card feature row; no cream/beige luxury palette; no purple-blue gradient; no glassmorphism dashboard; no paw-print decoration; no watermark; preserve excellent readability and practical navigation. Render at high fidelity with legible typography and web-browser proportions.

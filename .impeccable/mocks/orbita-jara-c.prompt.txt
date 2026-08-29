@@ -1,0 +1,18 @@
+Use case: ui-mockup
+Asset type: composition option C for a high-fidelity desktop homepage, 16:10 landscape, Clínica Veterinaria Jara.
+Input images: orbita-jara.png is the approved visual-world reference and must carry over cold-white ground, near-black wide display type, translucent acrylic lime/coral/cyan/orange planes, chrome hairlines, real-clinic photography and premium Awwwards-level finish. logo-jara.png is the exact logo. consulta.jpg, sala-espera.jpg and quirofano.jpg are real clinic content. Do not copy the approved comp's layout; keep its identity and materials while testing a different composition.
+
+Primary request: create a shippable website screenshot for the same "Órbita Jara" world using an immersive central-portal composition.
+
+Page structure:
+1) Single-line 72px navigation, exact logo left; "Clínica", "Servicios", "Equipo", "Contacto"; compact email or phone action right.
+2) The complete hero fits above the fold. A monumental central portrait window, approximately 44% viewport width and 70% viewport height, shows a pet receiving care. The window is vertical and sculptural, with a soft asymmetrical arch formed by translucent acrylic lime, coral, cyan and tangerine layers behind and around it.
+3) Typography becomes the architectural frame: huge near-black "SU SALUD." spans the upper-left field and huge "SU MUNDO." anchors the lower-left field, both fully legible and not covered by the photo. Between them sits the concise line "Medicina veterinaria avanzada con el cuidado cercano de siempre."
+4) At lower left, primary CTA "PEDIR CITA"; immediately beside it, "URGENCIAS 659 967 706". At the right edge, a slim vertical service index: "01 CIRUGÍA", "02 DIAGNÓSTICO", "03 HOSPITALIZACIÓN", "04 MEDICINA INTERNA".
+5) At the bottom edge show the beginning of a calm second section with the heading "La precisión que necesitan. El cuidado que reconocen." and a wide real-clinic photograph.
+
+Visual direction and invariants: exact Órbita Jara identity; cold mineral white, near-black type, restrained chrome/silver, large translucent acrylic color planes, real photography, 14px soft image corners, hairline divisions. One dominant move only: the central photographic portal. Strongly editorial and award-level, but contact actions remain immediately obvious. No card grid.
+
+Motion implied: acrylic planes can separate slightly on pointer movement and the central portal can reveal depth on scroll; no motion blur.
+Exact text: "SU SALUD. SU MUNDO.", "Medicina veterinaria avanzada con el cuidado cercano de siempre.", "PEDIR CITA", "URGENCIAS 659 967 706", "01 CIRUGÍA", "02 DIAGNÓSTICO", "03 HOSPITALIZACIÓN", "04 MEDICINA INTERNA", "La precisión que necesitan. El cuidado que reconocen."
+Constraints: Spanish only; preserve exact logo; no fabricated testimonials, ratings, awards, opening hours, staff names or statistics; no generic card grid; no purple-blue gradient; no paw prints; no dark hero; no glassmorphism; no watermark; high contrast and legible type.
