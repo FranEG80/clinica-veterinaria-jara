@@ -27,7 +27,7 @@ const {
 } = Astro.props;
 
 const canonical = new URL(canonicalPath, Astro.site);
-const socialImage = new URL(image, Astro.site);
+const socialImage = new URL(image, Astro.url);
 ---
 
 <!doctype html>
