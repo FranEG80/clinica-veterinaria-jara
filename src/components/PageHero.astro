@@ -4,11 +4,12 @@ type Props = {
   intro: string;
   label: string;
   image: string;
+  imageSrcSet?: string;
   imageAlt: string;
   accent?: "lime" | "coral" | "cyan" | "orange";
 };
 
-const { title, intro, label, image, imageAlt, accent = "lime" } = Astro.props;
+const { title, intro, label, image, imageSrcSet, imageAlt, accent = "lime" } = Astro.props;
 ---
 
 <header class="page-hero" data-accent={accent}>
@@ -16,11 +17,14 @@ const { title, intro, label, image, imageAlt, accent = "lime" } = Astro.props;
     <p class="page-kicker">{label}</p>
     <h1 set:html={title} />
     <p class="page-intro">{intro}</p>
+    <slot name="actions" />
   </div>
 
   <figure class="page-hero-media">
     <img
       src={image}
+      srcset={imageSrcSet}
+      sizes="(min-width: 1024px) 59vw, 100vw"
       alt={imageAlt}
       width="1200"
       height="900"

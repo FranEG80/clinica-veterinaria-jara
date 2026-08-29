@@ -7,6 +7,7 @@ import {
   getClinicContent,
   plainText,
   postImage,
+  postImageSrcSet,
 } from "../../lib/wordpress";
 
 const content = await getClinicContent();
@@ -14,6 +15,7 @@ const posts = [...getBlogPosts(content)].sort(
   (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
 );
 const heroImage = posts[0] ? postImage(content, posts[0]) : fallbackMedia.hero;
+const heroImageSrcSet = posts[0] ? postImageSrcSet(content, posts[0]) : undefined;
 const featuredPost = posts[0];
 const archivePosts = posts.slice(1);
 const formatDate = (date: string) =>
@@ -27,7 +29,7 @@ const formatDate = (date: string) =>
   description="Consejos, prevención y actualidad veterinaria del equipo de Clínica Veterinaria Jara."
   image={heroImage}
 >
-  <main class="blog-page">
+  <div class="blog-page">
     <header class="blog-masthead section-shell">
       <div class="blog-masthead-index">
         <p class="page-kicker">Cuaderno clínico · Jara</p>
@@ -39,7 +41,15 @@ const formatDate = (date: string) =>
         acompañar a animales y familias cada día.
       </p>
       <figure class="blog-masthead-crop" aria-hidden="true">
-        <img src={heroImage} alt="" width="640" height="880" decoding="async" />
+        <img
+          src={heroImage}
+          srcset={heroImageSrcSet}
+          sizes="(min-width: 1445px) 260px, 18vw"
+          alt=""
+          width="640"
+          height="880"
+          decoding="async"
+        />
         <figcaption class="tabular">J / 01</figcaption>
       </figure>
     </header>
@@ -49,11 +59,14 @@ const formatDate = (date: string) =>
         <a class="blog-feature-media" href={`/blog/${featuredPost.slug}/`}>
           <img
             src={postImage(content, featuredPost)}
+            srcset={postImageSrcSet(content, featuredPost)}
+            sizes="(min-width: 1024px) 66vw, 100vw"
             alt={`Imagen del artículo: ${plainText(featuredPost.title.rendered)}`}
             width="1500"
             height="980"
             fetchpriority="high"
             decoding="async"
+            transition:name={`post-image-${featuredPost.slug}`}
           />
           <span class="blog-feature-marker tabular" aria-hidden="true">01</span>
         </a>
@@ -65,7 +78,7 @@ const formatDate = (date: string) =>
               <span>{content.categoryById.get(featuredPost.categories[0])?.name}</span>
             )}
           </div>
-          <h2 id="blog-feature-title">
+          <h2 id="blog-feature-title" transition:name={`post-title-${featuredPost.slug}`}>
             <a href={`/blog/${featuredPost.slug}/`}>{plainText(featuredPost.title.rendered)}</a>
           </h2>
           <p>{plainText(featuredPost.excerpt.rendered)}</p>
@@ -90,11 +103,14 @@ const formatDate = (date: string) =>
               <a class="blog-feed-media" href={`/blog/${post.slug}/`}>
                 <img
                   src={postImage(content, post)}
+                  srcset={postImageSrcSet(content, post)}
+                  sizes="(min-width: 768px) 42vw, 85vw"
                   alt={`Imagen del artículo: ${plainText(post.title.rendered)}`}
                   width="960"
                   height="720"
                   loading="lazy"
                   decoding="async"
+                  transition:name={`post-image-${post.slug}`}
                 />
               </a>
               <div class="blog-feed-copy">
@@ -105,7 +121,9 @@ const formatDate = (date: string) =>
                     <span>{content.categoryById.get(post.categories[0])?.name}</span>
                   )}
                 </p>
-                <h3><a href={`/blog/${post.slug}/`}>{plainText(post.title.rendered)}</a></h3>
+                <h3 transition:name={`post-title-${post.slug}`}>
+                  <a href={`/blog/${post.slug}/`}>{plainText(post.title.rendered)}</a>
+                </h3>
                 <p>{plainText(post.excerpt.rendered)}</p>
                 <a class="blog-read-link" href={`/blog/${post.slug}/`}>
                   Seguir leyendo <span aria-hidden="true">↗</span>
@@ -116,6 +134,6 @@ const formatDate = (date: string) =>
         </div>
       </section>
     )}
-  </main>
+  </div>
   <ContactSection />
 </BaseLayout>

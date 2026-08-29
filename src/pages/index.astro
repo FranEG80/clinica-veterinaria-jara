@@ -9,6 +9,7 @@ import {
   clinicServices,
   fallbackMedia,
   getClinicContent,
+  mediaSrcSetBySlug,
   mediaUrl,
   services,
 } from "../lib/wordpress";
@@ -17,15 +18,21 @@ import { teamProfiles } from "../lib/site";
 const content = await getClinicContent();
 
 const heroImage = mediaUrl(content, "peluqueria", "peluqueria");
+const heroImageSrcSet = mediaSrcSetBySlug(content, "peluqueria");
 const consultationImage = mediaUrl(content, "consulta");
+const consultationImageSrcSet = mediaSrcSetBySlug(content, "consulta");
 const clinicImage = "/assets/jara-paciente.jpeg";
 const waitingRoomImage = mediaUrl(content, "sala-de-espera");
+const waitingRoomImageSrcSet = mediaSrcSetBySlug(content, "sala-de-espera");
 const surgeryImage = mediaUrl(content, "quirofano");
+const surgeryImageSrcSet = mediaSrcSetBySlug(content, "quirofano");
 const teamGroupImage = "https://veterinariajara.es/wp-content/uploads/2022/09/NOSOTROS.jpg";
+const teamGroupImageSrcSet = mediaSrcSetBySlug(content, "nosotros");
 
 const serviceViews = clinicServices.map((service) => ({
   ...service,
   image: mediaUrl(content, service.mediaSlug, service.mediaSlug),
+  imageSrcSet: mediaSrcSetBySlug(content, service.mediaSlug),
   gallery: service.gallerySlugs
     .map((slug) => mediaUrl(content, slug, slug))
     .filter((value): value is string => Boolean(value)),
@@ -34,6 +41,7 @@ const serviceViews = clinicServices.map((service) => ({
 const team = teamProfiles.map((member) => ({
   ...member,
   image: mediaUrl(content, member.mediaSlug, member.fallbackKey),
+  imageSrcSet: mediaSrcSetBySlug(content, member.mediaSlug),
 }));
 
 const schema = {
@@ -60,9 +68,13 @@ const schema = {
 
   <HeroOrbit
     heroImage={heroImage}
+    heroImageSrcSet={heroImageSrcSet}
     consultationImage={consultationImage}
+    consultationImageSrcSet={consultationImageSrcSet}
     waitingRoomImage={waitingRoomImage}
+    waitingRoomImageSrcSet={waitingRoomImageSrcSet}
     surgeryImage={surgeryImage}
+    surgeryImageSrcSet={surgeryImageSrcSet}
     featuredServices={services.slice(0, 4)}
   />
 
@@ -70,14 +82,13 @@ const schema = {
     clinicImage={clinicImage}
     clinicImageAlt="Paciente canino frente a la entrada de Clínica Veterinaria Jara"
     portraitImage
-    ctaHref="/sobre-nosotros/"
-    ctaLabel="Conócenos"
     cta={[{ href: "/sobre-nosotros/", label: "Conócenos" }]}
   />
   <ServiceExplorer items={serviceViews} />
   <TeamRail
     members={team}
     featuredImage={teamGroupImage}
+    featuredImageSrcSet={teamGroupImageSrcSet}
     featuredImageAlt="Equipo de Clínica Veterinaria Jara"
     ctaHref="/sobre-nosotros/"
     ctaLabel="Conócenos"
@@ -85,67 +96,3 @@ const schema = {
   />
   <ContactSection />
 </BaseLayout>
-
-<script>
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
-
-  const hero = document.querySelector<HTMLElement>("[data-orbit-hero]");
-  if (hero && !reduceMotion.matches) {
-    let frame = 0;
-    let pointerX = 0;
-    let pointerY = 0;
-
-    const paintPointer = () => {
-      hero.style.setProperty("--pointer-x", pointerX.toFixed(3));
-      hero.style.setProperty("--pointer-y", pointerY.toFixed(3));
-      frame = 0;
-    };
-
-    if (finePointer.matches) {
-      hero.addEventListener("pointermove", (event) => {
-        const bounds = hero.getBoundingClientRect();
-        pointerX = (event.clientX - bounds.left) / bounds.width - 0.5;
-        pointerY = (event.clientY - bounds.top) / bounds.height - 0.5;
-        if (!frame) frame = requestAnimationFrame(paintPointer);
-      });
-
-      hero.addEventListener("pointerleave", () => {
-        pointerX = 0;
-        pointerY = 0;
-        if (!frame) frame = requestAnimationFrame(paintPointer);
-      });
-    }
-
-    let scrollFrame = 0;
-    const paintScroll = () => {
-      const progress = Math.min(1, Math.max(0, window.scrollY / window.innerHeight));
-      hero.style.setProperty("--hero-scroll", progress.toFixed(3));
-      scrollFrame = 0;
-    };
-    window.addEventListener(
-      "scroll",
-      () => {
-        if (!scrollFrame) scrollFrame = requestAnimationFrame(paintScroll);
-      },
-      { passive: true },
-    );
-  }
-
-  const revealBlocks = [...document.querySelectorAll<HTMLElement>(".reveal-block")];
-  if (revealBlocks.length && !reduceMotion.matches && "IntersectionObserver" in window) {
-    document.documentElement.classList.add("motion-ready");
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            (entry.target as HTMLElement).classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { rootMargin: "0px 0px -10% 0px", threshold: 0.12 },
-    );
-    revealBlocks.forEach((block) => observer.observe(block));
-  }
-</script>

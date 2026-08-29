@@ -10,13 +10,24 @@ export type WordPressPage = {
   excerpt?: { rendered: string };
 };
 
+export type WordPressMediaSize = {
+  source_url: string;
+  width: number;
+  height: number;
+};
+
 export type WordPressMedia = {
   id: number;
   slug: string;
   source_url: string;
   alt_text: string;
   caption?: { rendered: string };
-  media_details?: { width?: number; height?: number };
+  media_details?: {
+    width?: number;
+    height?: number;
+    /** WordPress ya genera estas variantes en cada subida: son `srcset` gratis. */
+    sizes?: Record<string, WordPressMediaSize>;
+  };
 };
 
 export type WordPressPost = {
@@ -338,6 +349,53 @@ export function getClinicContent(): Promise<ClinicContent> {
 
 export function mediaUrl(content: ClinicContent, slug: string, fallbackKey = slug) {
   return content.mediaBySlug.get(slug)?.source_url ?? fallbackMedia[fallbackKey];
+}
+
+/**
+ * Construye un `srcset` a partir de las variantes que WordPress ya generó.
+ * Sin esto el sitio servía siempre el original: `SALA-DE-ESPERA.jpg` (800x600)
+ * acababa estirado en un hero de 708x777, es decir a media resolución en
+ * cualquier pantalla retina.
+ */
+export function mediaSrcSet(media?: WordPressMedia): string | undefined {
+  const sizes = media?.media_details?.sizes;
+  const originalWidth = media?.media_details?.width;
+  const originalHeight = media?.media_details?.height;
+  if (!media || !sizes || !originalWidth || !originalHeight) return undefined;
+
+  // WordPress registra recortes duros junto a los tamaños proporcionales
+  // (miniaturas cuadradas, slides panorámicos, retratos de portfolio…), cada
+  // uno con un encuadre distinto del original. `srcset` solo distingue por
+  // ancho, no por recorte: mezclarlos servía, al azar, una foto encuadrada
+  // de otra forma en vez de una versión más pequeña de la misma. Se filtra
+  // a los tamaños que conservan la proporción del original (±2%).
+  const originalRatio = originalWidth / originalHeight;
+  const sameCrop = (width: number, height: number) =>
+    Math.abs(width / height - originalRatio) / originalRatio < 0.02;
+
+  const byWidth = new Map<number, string>();
+  for (const size of Object.values(sizes)) {
+    if (!size?.source_url || !size.width || !size.height) continue;
+    if (!sameCrop(size.width, size.height)) continue;
+    byWidth.set(size.width, size.source_url);
+  }
+  byWidth.set(originalWidth, media.source_url);
+
+  if (byWidth.size < 2) return undefined;
+  return [...byWidth.entries()]
+    .sort((a, b) => a[0] - b[0])
+    .map(([width, url]) => `${url} ${width}w`)
+    .join(", ");
+}
+
+/** `srcset` para un medio identificado por slug. */
+export function mediaSrcSetBySlug(content: ClinicContent, slug: string) {
+  return mediaSrcSet(content.mediaBySlug.get(slug));
+}
+
+/** `srcset` de la imagen destacada de un post. */
+export function postImageSrcSet(content: ClinicContent, post: WordPressPost) {
+  return mediaSrcSet(content.mediaById.get(post.featured_media));
 }
 
 export function postImage(content: ClinicContent, post: WordPressPost) {

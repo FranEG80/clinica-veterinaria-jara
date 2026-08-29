@@ -4,9 +4,7 @@ import ClinicProof from "./ClinicProof.astro";
 type Props = {
   clinicImage: string;
   clinicImageAlt?: string;
-  ctaHref?: string;
-  ctaLabel?: string;
-  cta: [{ href: string; label: string }][]
+  cta?: { href: string; label: string }[];
   showHeading?: boolean;
   portraitImage?: boolean;
 };
@@ -14,8 +12,6 @@ type Props = {
 const {
   clinicImage,
   clinicImageAlt = "Interior de Clínica Veterinaria Jara",
-  ctaHref,
-  ctaLabel = "Conócenos",
   cta = [],
   showHeading = true,
   portraitImage = false,
@@ -44,16 +40,8 @@ const {
         Desde 2015, Clínica Veterinaria Jara reúne tecnología, formación continua y una forma
         cercana de acompañar a cada familia.
       </p>
-      {ctaHref && false && (
-        <a class="text-link story-cta" href={ctaHref}>
-          <span>{ctaLabel}</span>
-          <svg viewBox="0 0 18 18" aria-hidden="true" focusable="false">
-            <path d="M4 14 14 4M6 4h8v8" fill="none" stroke="currentColor" stroke-width="1.5" />
-          </svg>
-        </a>
-      )}
       {cta.length > 0 && (
-        <div class="story-cta-group" style="display: flex; align-items: center; justify-content: space-around;">
+        <div class="story-cta-group">
           {cta.map(({ href, label }) => (
             <a class="text-link story-cta" href={href}>
               <span>{label}</span>

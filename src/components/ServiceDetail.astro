@@ -3,6 +3,7 @@ import ContactSection from "./ContactSection.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import {
   getClinicContent,
+  mediaSrcSetBySlug,
   mediaUrl,
   safeWordPressHtml,
   services,
@@ -18,6 +19,7 @@ type Props = {
 const { service, canonicalPath = `/${service.slug}/`, noIndex = true } = Astro.props;
 const content = await getClinicContent();
 const image = mediaUrl(content, service.mediaSlug, service.mediaSlug);
+const imageSrcSet = mediaSrcSetBySlug(content, service.mediaSlug);
 const wordpressPage = content.pageBySlug.get(service.slug);
 const wordpressHtml = safeWordPressHtml(wordpressPage?.content.rendered ?? "");
 const hasWordPressContent = Boolean(wordpressHtml.trim());
@@ -41,8 +43,13 @@ const titleRest = titleAccent ? service.title.slice(titleAccent.length).trim() :
   <article class="service-page" data-accent={service.accent}>
     <header class="service-page-hero">
       <div class="service-page-copy">
+        <nav class="service-breadcrumb" aria-label="Ruta de navegación">
+          <a href="/nuestros-servicios/">Servicios</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{service.title}</span>
+        </nav>
         <p class="service-page-index">Servicio {String(serviceIndex + 1).padStart(2, "0")}</p>
-        <h1 class="service-page-title">
+        <h1 class="service-page-title" transition:name={`service-title-${service.slug}`}>
           {titleAccent ? (<><i>{titleAccent}</i> {titleRest}</>) : service.title}
         </h1>
         <p>{service.summary}</p>
@@ -58,12 +65,15 @@ const titleRest = titleAccent ? service.title.slice(titleAccent.length).trim() :
       <figure class="service-page-media">
         <img
           src={image}
+          srcset={imageSrcSet}
+          sizes="(min-width: 1024px) 58vw, 100vw"
           alt={`${service.title} en Clínica Veterinaria Jara`}
           width="1200"
           height="900"
           loading="eager"
           fetchpriority="high"
           decoding="async"
+          transition:name={`service-image-${service.slug}`}
         />
         <span class="service-page-acrylic" aria-hidden="true"></span>
       </figure>

@@ -2,10 +2,12 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
 import ContactSection from "../components/ContactSection.astro";
-import { getClinicContent, mediaUrl } from "../lib/wordpress";
+import { getClinicContent, mediaSrcSetBySlug, mediaUrl } from "../lib/wordpress";
+import { clinicContact } from "../lib/site";
 
 const content = await getClinicContent();
 const heroImage = mediaUrl(content, "consulta");
+const heroImageSrcSet = mediaSrcSetBySlug(content, "consulta");
 ---
 
 <BaseLayout
@@ -18,8 +20,20 @@ const heroImage = mediaUrl(content, "consulta");
     title="Estamos <i>cerca</i><br />cuando nos necesite."
     intro="Citas, consultas y un teléfono específico para urgencias veterinarias."
     image={heroImage}
+    imageSrcSet={heroImageSrcSet}
     imageAlt="Consulta de Clínica Veterinaria Jara"
     accent="orange"
-  />
+  >
+    {/* El titular ya dice "cerca cuando nos necesite": sin esto, la única
+        vía de contacto real quedaba casi dos viewports de scroll por debajo
+        en móvil. */}
+    <div class="page-hero-actions" slot="actions">
+      <a class="button button-primary" href={clinicContact.appointmentsHref}>Pedir cita</a>
+      <a class="button button-secondary" href={clinicContact.emergenciesHref}>
+        <span>Urgencias</span>
+        <span class="tabular">{clinicContact.emergencies}</span>
+      </a>
+    </div>
+  </PageHero>
   <ContactSection />
 </BaseLayout>

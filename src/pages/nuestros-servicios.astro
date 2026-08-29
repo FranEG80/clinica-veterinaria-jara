@@ -3,13 +3,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
 import ServiceExplorer from "../components/ServiceExplorer.astro";
 import ContactSection from "../components/ContactSection.astro";
-import { getClinicContent, mediaUrl, clinicServices } from "../lib/wordpress";
+import { getClinicContent, mediaSrcSetBySlug, mediaUrl, clinicServices } from "../lib/wordpress";
 
 const content = await getClinicContent();
 const heroImage = mediaUrl(content, "quirofano");
+const heroImageSrcSet = mediaSrcSetBySlug(content, "quirofano");
 const serviceViews = clinicServices.map((service) => ({
   ...service,
   image: mediaUrl(content, service.mediaSlug, service.mediaSlug),
+  imageSrcSet: mediaSrcSetBySlug(content, service.mediaSlug),
   gallery: service.gallerySlugs
     .map((slug) => mediaUrl(content, slug, slug))
     .filter((value): value is string => Boolean(value)),
@@ -26,6 +28,7 @@ const serviceViews = clinicServices.map((service) => ({
     title="Capacidad clínica para<br /><i class='solo'>cuidar mejor.</i>"
     intro="Prevención, diagnóstico y tratamiento coordinados en un mismo centro veterinario."
     image={heroImage}
+    imageSrcSet={heroImageSrcSet}
     imageAlt="Quirófano de Clínica Veterinaria Jara"
     accent="lime"
   />

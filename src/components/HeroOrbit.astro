@@ -3,17 +3,25 @@ import type { Service } from "../lib/wordpress";
 
 type Props = {
   heroImage: string;
+  heroImageSrcSet?: string;
   consultationImage: string;
+  consultationImageSrcSet?: string;
   waitingRoomImage: string;
+  waitingRoomImageSrcSet?: string;
   surgeryImage: string;
+  surgeryImageSrcSet?: string;
   featuredServices: Service[];
 };
 
 const {
   heroImage,
+  heroImageSrcSet,
   consultationImage,
+  consultationImageSrcSet,
   waitingRoomImage,
+  waitingRoomImageSrcSet,
   surgeryImage,
+  surgeryImageSrcSet,
   featuredServices,
 } = Astro.props;
 ---
@@ -45,6 +53,8 @@ const {
       <figure class="orbit-photo orbit-photo-main" data-orbit-layer="0.2">
         <img
           src={heroImage}
+          srcset={heroImageSrcSet}
+          sizes="(min-width: 1024px) 34vw, (min-width: 768px) 46vw, 78vw"
           alt="Paciente durante una sesión de peluquería en Clínica Veterinaria Jara"
           width="1500"
           height="1000"
@@ -53,13 +63,18 @@ const {
         />
       </figure>
 
+      {/* Visibles desde el primer fotograma (forman parte del collage), pero
+          no son la imagen LCP: `fetchpriority="low"` evita que compitan por
+          ancho de banda con la foto principal. */}
       <figure class="orbit-photo orbit-photo-consultation" data-orbit-layer="0.5">
         <img
           src={consultationImage}
+          srcset={consultationImageSrcSet}
+          sizes="(min-width: 1024px) 27vw, (min-width: 768px) 37vw, 40vw"
           alt="Consulta de Clínica Veterinaria Jara"
           width="800"
           height="600"
-          loading="eager"
+          fetchpriority="low"
           decoding="async"
         />
       </figure>
@@ -67,10 +82,12 @@ const {
       <figure class="orbit-photo orbit-photo-waiting" data-orbit-layer="0.7">
         <img
           src={waitingRoomImage}
+          srcset={waitingRoomImageSrcSet}
+          sizes="(min-width: 1024px) 29vw, (min-width: 768px) 39vw, 62vw"
           alt="Sala de espera de Clínica Veterinaria Jara"
           width="800"
           height="600"
-          loading="eager"
+          fetchpriority="low"
           decoding="async"
         />
       </figure>
@@ -78,10 +95,12 @@ const {
       <figure class="orbit-photo orbit-photo-surgery" data-orbit-layer="0.6">
         <img
           src={surgeryImage}
+          srcset={surgeryImageSrcSet}
+          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 45vw, 72vw"
           alt="Quirófano de Clínica Veterinaria Jara"
           width="800"
           height="600"
-          loading="eager"
+          fetchpriority="low"
           decoding="async"
         />
       </figure>

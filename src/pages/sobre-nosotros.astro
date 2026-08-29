@@ -3,14 +3,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
 import ContactSection from "../components/ContactSection.astro";
 import ClinicProof from "../components/ClinicProof.astro";
-import { getClinicContent, mediaUrl } from "../lib/wordpress";
+import { getClinicContent, mediaSrcSetBySlug, mediaUrl } from "../lib/wordpress";
 import { teamProfiles } from "../lib/site";
 
 const content = await getClinicContent();
 const heroImage = mediaUrl(content, "sala-de-espera");
+const heroImageSrcSet = mediaSrcSetBySlug(content, "sala-de-espera");
 const team = teamProfiles.map((member) => ({
   ...member,
   image: mediaUrl(content, member.mediaSlug, member.fallbackKey),
+  imageSrcSet: mediaSrcSetBySlug(content, member.mediaSlug),
 }));
 
 const specialties = [
@@ -28,6 +30,7 @@ const specialties = [
     title="Ciencia que cuida. Personas que<br /><i class='solo'>acompañan.</i>"
     intro="Desde 2015 unimos medicina veterinaria, tecnología y una relación cercana con cada familia."
     image={heroImage}
+    imageSrcSet={heroImageSrcSet}
     imageAlt="Sala de espera de Clínica Veterinaria Jara"
     accent="coral"
   />
@@ -60,7 +63,7 @@ const specialties = [
     <ClinicProof standalone />
   </section>
 
-  <section class="team-section" id="equipo" aria-labelledby="team-title" style="background-color: #f5f6f4;">
+  <section class="team-section team-section-tinted" id="equipo" aria-labelledby="team-title">
     <div class:list={["section-shell", "team-heading", "reveal-block"]}>
       <div class="team-heading-copy">
         <p class="page-kicker team-kicker">El equipo · Jara</p>
@@ -87,9 +90,18 @@ const specialties = [
       {
         team.map((member, index) => (
           <article class={`team-portrait team-portrait-${index + 1}`}>
-            <figure class="team-portrait-media">
+            {/* El reveal va en la foto, no en `.team-portrait`: ese elemento ya
+                tiene su propio `transform` para el desfase vertical alterno
+                de la retícula, y compartir la propiedad con la animación
+                hacía que una pisara a la otra. El delay es fijo por índice
+                (no depende del orden en que dispare el IntersectionObserver),
+                para que la cascada se lea de arriba/izquierda a abajo/derecha
+                siguiendo el orden real de la retícula. */}
+            <figure class="team-portrait-media reveal-block" style={`--reveal-delay: ${index * 90}ms`}>
               <img
                 src={member.image}
+                srcset={member.imageSrcSet}
+                sizes="(min-width: 1024px) 22vw, (min-width: 768px) 30vw, 46vw"
                 alt={`${member.name}, ${member.role.toLowerCase()}`}
                 width="1200"
                 height="1800"
