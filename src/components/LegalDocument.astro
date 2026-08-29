@@ -6,21 +6,80 @@ const { title, updated, description } = Astro.props;
 ---
 
 <BaseLayout title={`${title} | Clínica Veterinaria Jara`} description={description}>
-  <header class="legal-header section-shell">
-    <p class="page-kicker">Información legal</p>
-    <h1>{title}</h1>
-    <p class="legal-updated">Última actualización: {updated}</p>
-  </header>
-  <article class="wp-prose legal-prose">
-    <slot />
-  </article>
+  <div class="legal-shell">
+    <header class="legal-header">
+      <p class="page-kicker">Información legal</p>
+      <h1>{title}</h1>
+      <p class="legal-updated">Última actualización: {updated}</p>
+    </header>
+    <article class="wp-prose legal-prose">
+      <slot />
+    </article>
+  </div>
 </BaseLayout>
 
 <style>
+  .legal-shell {
+    width: 100%;
+    max-width: 78ch;
+    margin-inline: auto;
+    padding-inline: clamp(20px, 5vw, 48px);
+    padding-bottom: clamp(64px, 9vw, 140px);
+    box-sizing: border-box;
+  }
+
+  .legal-header {
+    padding-block: clamp(72px, 11vw, 170px) clamp(32px, 4vw, 56px);
+  }
+
+  .legal-header h1 {
+    max-width: 20ch;
+    font-size: clamp(2.5rem, 7vw, 4.5rem);
+  }
+
   .legal-updated {
-    margin-top: 0.75rem;
+    margin-top: 0.85rem;
     font-size: 0.9rem;
     letter-spacing: 0.02em;
-    opacity: 0.7;
+    opacity: 0.65;
+  }
+
+  .legal-prose {
+    grid-column: auto;
+    padding-top: clamp(28px, 3.5vw, 48px);
+    line-height: 1.65;
+  }
+
+  /* Ritmo compacto: es un documento de consulta, no un artículo editorial */
+  .legal-prose :global(h2) {
+    margin-top: 1.5em;
+    margin-bottom: 0.4em;
+    font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+
+  .legal-prose :global(p + p),
+  .legal-prose :global(p + ul),
+  .legal-prose :global(p + ol),
+  .legal-prose :global(ul + p),
+  .legal-prose :global(ol + p) {
+    margin-top: 0.85em;
+  }
+
+  .legal-prose :global(ul),
+  .legal-prose :global(ol) {
+    gap: 0.45em;
+  }
+
+  /* Capitular fuera de lugar en un texto legal */
+  .legal-prose > :global(p:first-child)::first-letter {
+    float: none;
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    color: inherit;
   }
 </style>
