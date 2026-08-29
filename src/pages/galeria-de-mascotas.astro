@@ -41,6 +41,22 @@ const images = gallery.length
         height: 900,
       },
     ];
+
+const featuredGallerySource =
+  "https://veterinariajara.es/wp-content/uploads/2014/10/home_vet_gallery.jpg";
+const featuredIndex = Math.max(
+  images.findIndex((item) => item.src === featuredGallerySource),
+  0,
+);
+const featuredEntry = { item: images[featuredIndex], index: featuredIndex };
+const otherImages = images
+  .map((item, index) => ({ item, index }))
+  .filter(({ index }) => index !== featuredIndex);
+const galleryColumns = [
+  otherImages.filter((_, index) => index % 3 === 0),
+  [featuredEntry, ...otherImages.filter((_, index) => index % 3 === 2)],
+  otherImages.filter((_, index) => index % 3 === 1),
+];
 const heroImage = images[0]?.src ?? mediaUrl(content, "clinica-veterinaria-jara-quienes-somos", "hero");
 ---
 
@@ -59,33 +75,36 @@ const heroImage = images[0]?.src ?? mediaUrl(content, "clinica-veterinaria-jara-
   />
 
   <section class="gallery-section section-shell" aria-label="Galería de mascotas">
-    {images.map((item, index) => (
-      <figure class:list={["gallery-item", "reveal-block", item.height > item.width ? "gallery-item-portrait" : "gallery-item-landscape"]}>
-        <button
-          class="gallery-image-button"
-          type="button"
-          data-gallery-lightbox-source={item.src}
-          data-gallery-lightbox-alt={item.alt}
-          data-gallery-lightbox-caption={`JARA · ${String(index + 1).padStart(2, "0")}`}
-          aria-label={`Ampliar imagen ${index + 1} de la galería`}
-        >
-          <img
-            src={item.src}
-            srcset={item.srcSet}
-            sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-            alt={item.alt}
-            width={item.width}
-            height={item.height}
-            loading={index < 3 ? "eager" : "lazy"}
-            decoding="async"
-          />
-          <span class="gallery-image-hint" aria-hidden="true">Ampliar</span>
-        </button>
-        <figcaption class="tabular">JARA · {String(index + 1).padStart(2, "0")}</figcaption>
-      </figure>
+    {galleryColumns.map((column, columnIndex) => (
+      <div class:list={["gallery-column", `gallery-column-${columnIndex + 1}`]}>
+        {column.map(({ item, index }) => (
+          <figure class:list={["gallery-item", "reveal-block", item.height > item.width ? "gallery-item-portrait" : "gallery-item-landscape"]}>
+            <button
+              class="gallery-image-button"
+              type="button"
+              data-gallery-lightbox-source={item.src}
+              data-gallery-lightbox-alt={item.alt}
+              data-gallery-lightbox-caption={`Jara - ${String(index + 1).padStart(2, "0")}`}
+              aria-label={`Ampliar imagen ${index + 1} de la galería`}
+            >
+              <img
+                src={item.src}
+                srcset={item.srcSet}
+                sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                alt={item.alt}
+                width={item.width}
+                height={item.height}
+                loading={index < 3 ? "eager" : "lazy"}
+                decoding="async"
+              />
+            </button>
+            <figcaption class="tabular">JARA · {String(index + 1).padStart(2, "0")}</figcaption>
+          </figure>
+        ))}
+      </div>
     ))}
   </section>
-  <dialog class="image-modal gallery-modal" data-gallery-modal aria-labelledby="gallery-modal-title">
+  <dialog class="image-modal gallery-modal" data-gallery-modal aria-labelledby="gallery-modal-title" tabindex="-1">
     <form method="dialog" class="image-modal-close-form">
       <button class="image-modal-close" type="submit" aria-label="Cerrar imagen">
         <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
@@ -95,8 +114,30 @@ const heroImage = images[0]?.src ?? mediaUrl(content, "clinica-veterinaria-jara-
     </form>
     <div class="image-modal-inner">
       <p id="gallery-modal-title" class="sr-only">Imagen ampliada de la galería</p>
+      <nav class="gallery-modal-navigation" aria-label="Navegación de la galería">
+        <button
+          class="gallery-modal-nav gallery-modal-nav-previous"
+          type="button"
+          data-gallery-previous
+          aria-label="Foto anterior"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M20 12H5m6-6-6 6 6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" />
+          </svg>
+        </button>
+        <button
+          class="gallery-modal-nav gallery-modal-nav-next"
+          type="button"
+          data-gallery-next
+          aria-label="Foto siguiente"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M4 12h15m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" />
+          </svg>
+        </button>
+      </nav>
       <img data-gallery-modal-image src={heroImage} alt="" />
-      <p data-gallery-modal-caption></p>
+      <p data-gallery-modal-caption aria-live="polite"></p>
     </div>
   </dialog>
   <ContactSection />
@@ -106,6 +147,8 @@ const heroImage = images[0]?.src ?? mediaUrl(content, "clinica-veterinaria-jara-
   const galleryModal = document.querySelector<HTMLDialogElement>("[data-gallery-modal]");
   const galleryModalImage = galleryModal?.querySelector<HTMLImageElement>("[data-gallery-modal-image]");
   const galleryModalCaption = galleryModal?.querySelector<HTMLElement>("[data-gallery-modal-caption]");
+  const previousButton = galleryModal?.querySelector<HTMLButtonElement>("[data-gallery-previous]");
+  const nextButton = galleryModal?.querySelector<HTMLButtonElement>("[data-gallery-next]");
   const galleryTriggers = [
     ...document.querySelectorAll<HTMLButtonElement>("[data-gallery-lightbox-source]"),
   ];
@@ -120,6 +163,7 @@ const heroImage = images[0]?.src ?? mediaUrl(content, "clinica-veterinaria-jara-
     // de que el modal aparezca aparte.
     const MORPH_NAME = "gallery-lightbox";
     let activeThumb: HTMLImageElement | null = null;
+    let activeIndex = -1;
 
     // Safari parpadea con el morph vía View Transition sobre `<dialog>`;
     // `is-safari` la pone `BaseLayout.astro` en `<html>` (misma detección
@@ -134,14 +178,25 @@ const heroImage = images[0]?.src ?? mediaUrl(content, "clinica-veterinaria-jara-
       galleryModalCaption.textContent = trigger.dataset.galleryLightboxCaption ?? "Galería de mascotas";
     };
 
+    const navigateGallery = (direction: -1 | 1) => {
+      if (!galleryTriggers.length) return;
+      activeIndex = (activeIndex + direction + galleryTriggers.length) % galleryTriggers.length;
+      const trigger = galleryTriggers[activeIndex];
+      activeThumb = trigger.querySelector<HTMLImageElement>("img");
+      fillModal(trigger);
+    };
+
     const openGalleryImage = (trigger: HTMLButtonElement) => {
       const thumb = trigger.querySelector<HTMLImageElement>("img");
+      activeIndex = galleryTriggers.indexOf(trigger);
       const show = () => {
         if (typeof galleryModal.showModal === "function") galleryModal.showModal();
         else galleryModal.setAttribute("open", "");
+        galleryModal.focus({ preventScroll: true });
       };
 
       if (!thumb || !canMorph()) {
+        activeThumb = null;
         fillModal(trigger);
         show();
         return;
@@ -176,6 +231,20 @@ const heroImage = images[0]?.src ?? mediaUrl(content, "clinica-veterinaria-jara-
 
     galleryTriggers.forEach((trigger) => {
       trigger.addEventListener("click", () => openGalleryImage(trigger));
+    });
+
+    previousButton?.addEventListener("click", () => navigateGallery(-1));
+    nextButton?.addEventListener("click", () => navigateGallery(1));
+
+    galleryModal.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        navigateGallery(-1);
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        navigateGallery(1);
+      }
     });
 
     galleryModal.addEventListener("click", (event) => {
