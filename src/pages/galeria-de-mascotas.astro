@@ -247,6 +247,15 @@ const heroImage = images[0]?.src ?? mediaUrl(content, "clinica-veterinaria-jara-
     nextButton?.addEventListener("click", () => navigateGallery(1));
 
     galleryModal.addEventListener("keydown", (event) => {
+      // Los diálogos nativos se cierran solos con Escape y no deben recibir
+      // un segundo cierre. En el fallback (solo `open`), esta tecla no tiene
+      // comportamiento del navegador, así que la cerramos explícitamente.
+      if (event.key === "Escape" && !supportsNativeDialog) {
+        event.preventDefault();
+        closeGalleryImage();
+        return;
+      }
+
       if (event.key === "ArrowLeft") {
         event.preventDefault();
         navigateGallery(-1);
