@@ -6,6 +6,7 @@ import {
   getBlogPosts,
   plainText,
   postImage,
+  postImageSrcSet,
   safeWordPressHtml,
   type WordPressPost,
 } from "../../lib/wordpress";
@@ -22,6 +23,7 @@ type Props = { post: WordPressPost };
 const { post } = Astro.props;
 const content = await getClinicContent();
 const image = postImage(content, post);
+const imageSrcSet = postImageSrcSet(content, post);
 const title = plainText(post.title.rendered);
 const description = plainText(post.excerpt.rendered).slice(0, 160);
 const category = content.categoryById.get(post.categories[0]);
@@ -44,17 +46,20 @@ const formatDate = (date: string) =>
           {category && <span>{category.name}</span>}
           <span>{readingMinutes} min de lectura</span>
         </p>
-        <h1>{title}</h1>
+        <h1 transition:name={`post-title-${post.slug}`}>{title}</h1>
         <p>{description}</p>
       </div>
       <figure class="post-hero-media">
         <img
           src={image}
+          srcset={imageSrcSet}
+          sizes="(min-width: 1024px) 83vw, 100vw"
           alt={`Imagen de portada: ${title}`}
           width="1400"
           height="900"
           fetchpriority="high"
           decoding="async"
+          transition:name={`post-image-${post.slug}`}
         />
         <span class="post-hero-accent" aria-hidden="true"></span>
         <figcaption>Cuaderno clínico · Clínica Veterinaria Jara</figcaption>

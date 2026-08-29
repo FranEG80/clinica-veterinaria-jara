@@ -1,9 +1,27 @@
 :root {
+  /* --- Superficies: una sola rampa, de la más luminosa a la más densa --- */
   --ground: #fcfcfc;
-  --surface: #f2f4f2;
+  --surface-1: #f8f9f8;
+  --surface-2: #f5f6f4;
+  --surface-3: #f2f4f2;
+  --surface-4: #edf0ed;
+
+  /* Fondo que sostiene una foto mientras carga */
+  --placeholder: #e5e2df;
+  --placeholder-cool: #deded9;
+
+  /* --- Tinta --- */
   --ink: #100f0f;
   --ink-soft: #4a433c;
+  --ink-raised: #292523;
   --line: rgba(16, 15, 15, 0.16);
+
+  /* Texto sobre tinta, en tres pesos de presencia */
+  --on-ink: #f3f1ee;
+  --on-ink-soft: #d6d2cf;
+  --on-ink-faint: #aaa7a4;
+
+  /* --- Acentos. Las variantes -deep son las únicas legibles como texto --- */
   --lime: #b6d92c;
   --lime-deep: #6b8a10;
   --coral: #f2716e;
@@ -13,11 +31,36 @@
   --orange: #e17226;
   --orange-deep: #c25f14;
   --violet-source: #957396;
+
+  /* --- Ritmo espacial. Escala única; los valores sueltos son la excepción --- */
+  --space-2xs: clamp(8px, 1vw, 12px);
+  --space-xs: clamp(12px, 1.4vw, 18px);
+  --space-s: clamp(18px, 2.2vw, 28px);
+  --space-m: clamp(28px, 3.4vw, 44px);
+  --space-l: clamp(44px, 5vw, 68px);
+  --space-xl: clamp(64px, 7vw, 104px);
+  --space-2xl: clamp(84px, 9vw, 140px);
+  --space-3xl: clamp(100px, 12vw, 180px);
+
+  /* --- Tracking: se aprieta según crece el cuerpo, nunca al revés --- */
+  --track-mega: -0.06em;    /* > 6rem  */
+  --track-display: -0.042em; /* 3.4-6rem */
+  --track-xl: -0.035em;      /* 2.6-3.4rem */
+  --track-l: -0.025em;       /* 1.8-2.6rem */
+  --track-m: -0.015em;       /* 1.4-1.8rem */
+
   --radius: 14px;
   --header-height: 72px;
+
+  /* --- Movimiento --- */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
-  --shadow-stage: 0 30px 80px rgba(78, 67, 63, 0.16);
+
+  /* --- Sombra: una sola base cálida, tres alturas --- */
+  --shadow-rgb: 78 67 63;
+  --shadow-stage: 0 30px 80px rgb(var(--shadow-rgb) / 0.16);
+  --shadow-float: 0 22px 58px rgb(var(--shadow-rgb) / 0.09);
+  --shadow-panel: 0 24px 48px rgb(var(--shadow-rgb) / 0.12);
   color-scheme: light;
   font-family: "Bricolage Grotesque Variable", sans-serif;
   font-synthesis: none;
@@ -33,6 +76,7 @@
 html {
   background: var(--ground);
   color: var(--ink);
+  scroll-behavior: smooth;
   scroll-padding-top: calc(var(--header-height) + 24px);
   scrollbar-color: var(--ink) var(--ground);
   scrollbar-width: thin;
@@ -141,6 +185,12 @@ h3 {
   transform: translateY(0);
 }
 
+/* `<main>` no es enfocable por defecto: sin `tabindex="-1"` el enlace movía
+   el scroll pero dejaba el foco en la cabecera y parecía no hacer nada. */
+#contenido:focus {
+  outline: none;
+}
+
 .section-shell {
   width: min(100% - 48px, 1440px);
   margin-inline: auto;
@@ -247,9 +297,35 @@ h3 {
   }
 }
 
+/* Respuesta en `pointerdown`, no al soltar: sin esto, en táctil no ocurre
+   nada visible hasta que carga la página siguiente. */
 .header-contact:active,
-.button:active {
+.button:active,
+.team-cta:active,
+.story-cta:active,
+.mobile-nav nav a:active,
+.footer-columns a:active,
+.footer-meta a:active,
+.map-address a:active,
+.blog-read-link:active,
+.service-next:active,
+.image-modal-close:active {
   transform: translateY(1px);
+}
+
+.service-row:active,
+.contact-actions a:active,
+.service-rail a:active {
+  background: var(--surface-3);
+}
+
+.desktop-nav a:active,
+.gallery-image-button:active {
+  opacity: 0.72;
+}
+
+.gallery-image-button:active img {
+  transform: scale(0.99);
 }
 
 .hero {
@@ -281,7 +357,7 @@ h3 {
   font-family: "Barlow Condensed", sans-serif;
   font-size: clamp(4.6rem, 6.4vw, 6rem);
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: var(--track-display);
   line-height: 0.84;
   text-transform: uppercase;
 }
@@ -352,7 +428,7 @@ h3 {
   }
 
   .button-secondary:hover {
-    background: var(--surface);
+    background: var(--surface-3);
   }
 }
 
@@ -361,13 +437,23 @@ h3 {
   isolation: isolate;
   min-width: 0;
   overflow: hidden;
-  background: #f8f9f8;
+  background: var(--surface-1);
 }
 
+/* El suavizado del parallax vive en el bucle rAF (lerp), no en una
+   `transition`: reiniciar una transición de 500 ms en cada `pointermove`
+   dejaba las capas medio segundo por detrás del cursor. `will-change` solo
+   se activa mientras el bucle está corriendo (puntero encima o scroll en
+   curso), no de forma permanente en las 9 capas del hero. */
 .orbit-photo,
 .acrylic,
 .orbit-lines {
   position: absolute;
+}
+
+[data-orbit-hero].is-animating .orbit-photo,
+[data-orbit-hero].is-animating .acrylic,
+[data-orbit-hero].is-animating .orbit-lines {
   will-change: transform;
 }
 
@@ -381,7 +467,6 @@ h3 {
     calc((var(--pointer-y) * var(--orbit-depth, 0) * 1px) + (var(--hero-scroll) * var(--scroll-depth, 0) * 1px)),
     0
   );
-  transition: transform 500ms var(--ease-out);
 }
 
 .orbit-photo img {
@@ -441,13 +526,12 @@ h3 {
 .acrylic {
   z-index: 2;
   opacity: 0.9;
-  box-shadow: 0 22px 58px rgba(78, 67, 63, 0.09);
+  box-shadow: var(--shadow-float);
   transform: translate3d(
       calc(var(--pointer-x) * var(--orbit-depth, 0) * 1px),
       calc((var(--pointer-y) * var(--orbit-depth, 0) * 1px) + (var(--hero-scroll) * var(--scroll-depth, 0) * 1px)),
       0
     ) rotate(var(--rotate, 0));
-  transition: transform 540ms var(--ease-out);
 }
 
 .acrylic-lime {
@@ -508,7 +592,6 @@ h3 {
   height: 100%;
   pointer-events: none;
   transform: translate3d(calc(var(--pointer-x) * -8px), calc(var(--pointer-y) * -8px), 0);
-  transition: transform 560ms var(--ease-out);
 }
 
 .orbit-lines path {
@@ -539,24 +622,7 @@ h3 {
 
 .node-orange {
   fill: var(--orange);
-}
-
-.hero-email {
-  position: absolute;
-  z-index: 12;
-  right: 22px;
-  bottom: 18px;
-  padding: 8px 12px;
-  border: 1px solid rgba(16, 15, 15, 0.35);
-  border-radius: 8px;
-  background: rgba(252, 252, 252, 0.88);
-  color: var(--ink);
-  font-size: 0.72rem;
-  text-decoration: none;
-  backdrop-filter: blur(8px);
-}
-
-.service-rail {
+}.service-rail {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   min-height: 92px;
@@ -648,7 +714,7 @@ h3 {
   font-family: "Barlow Condensed", sans-serif;
   font-size: clamp(3.6rem, 6.4vw, 6rem);
   font-weight: 600;
-  letter-spacing: -0.03em;
+  letter-spacing: var(--track-display);
   line-height: 0.92;
   text-transform: uppercase;
 }
@@ -668,7 +734,7 @@ h3 {
   font-family: "Barlow Condensed", sans-serif;
   font-size: clamp(3.6rem, 6.4vw, 6rem);
   font-weight: 600;
-  letter-spacing: -0.03em;
+  letter-spacing: var(--track-display);
   line-height: 0.92;
   text-transform: uppercase;
 }
@@ -681,6 +747,12 @@ h3 {
   color: var(--ink-soft);
   font-size: clamp(1rem, 1.35vw, 1.25rem);
   line-height: 1.6;
+}
+
+.story-cta-group {
+  display: flex;
+  align-items: center;
+  gap: 28px;
 }
 
 .story-cta,
@@ -945,7 +1017,7 @@ h3 {
   padding-block: clamp(72px, 7vw, 112px);
   padding-inline: max(24px, calc((100vw - 1440px) / 2));
   border-top: 1px solid var(--line);
-  background: #f5f6f4;
+  background: var(--surface-2);
 }
 
 .services-section.section-shell {
@@ -1016,7 +1088,7 @@ h3 {
   font-family: "Barlow Condensed", sans-serif;
   font-size: clamp(1.8rem, 2.7vw, 2.6rem);
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--track-l);
   line-height: 1;
   text-transform: uppercase;
 }
@@ -1026,15 +1098,7 @@ h3 {
   margin-top: 12px;
   color: var(--ink-soft);
   font-size: 0.9rem;
-}
-
-.service-row-link {
-  display: block;
-  width: fit-content;
-  text-decoration: none;
-}
-
-.service-row-copy {
+}.service-row-copy {
   grid-area: auto;
 }
 
@@ -1082,21 +1146,25 @@ h3 {
   min-height: 540px;
   overflow: hidden;
   border-radius: var(--radius);
-  background: #deded9;
+  background: var(--placeholder-cool);
 }
 
-.service-preview-frame img {
+/* Dos capas apiladas que se cruzan en opacidad: se puede interrumpir en
+   cualquier fotograma (basta con no marcar `.is-active` en la que estaba
+   entrando), sin el temporizador de 110 ms que antes parpadeaba al recorrer
+   varias filas seguidas. */
+.service-preview-image {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition:
-    opacity 220ms var(--ease-out),
-    transform 220ms var(--ease-out);
+  opacity: 0;
+  transition: opacity 260ms var(--ease-out);
 }
 
-.service-preview.is-changing img {
-  opacity: 0.25;
-  transform: scale(0.98);
+.service-preview-image.is-active {
+  opacity: 1;
 }
 
 .preview-acrylic {
@@ -1145,7 +1213,57 @@ h3 {
 
 .image-modal::backdrop {
   background: rgba(16, 15, 15, 0.86);
+  /* El desenfoque no se anima: es la parte más cara de un `backdrop-filter`
+     en tirones/GPU, y es lo que hacía que el fundido se notara brusco
+     aunque la transición existiera. El fundido de opacidad ya transmite la
+     llegada del material sin ese coste. */
   backdrop-filter: blur(10px);
+}
+
+.image-modal,
+.image-modal::backdrop {
+  transition:
+    opacity 320ms var(--ease-out),
+    transform 320ms var(--ease-out),
+    overlay 320ms allow-discrete,
+    display 320ms allow-discrete;
+}
+
+.image-modal:not([open]),
+.image-modal:not([open])::backdrop {
+  opacity: 0;
+}
+
+.image-modal:not([open]) {
+  transform: scale(0.97);
+}
+
+.image-modal[open] {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@starting-style {
+  .image-modal[open] {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+
+  .image-modal[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+/* Safari parpadea al abrir/cerrar: su soporte de `@starting-style` +
+   `allow-discrete` sobre `dialog`/`::backdrop` no es tan maduro como en
+   Chrome, y combinado con la View Transition del morph de la galería
+   provoca el parpadeo. Se desactiva solo aquí (clase `is-safari` puesta en
+   `<html>` desde `BaseLayout.astro`): abre y cierra sin transición, en vez
+   de con una transición que falla a medias. El resto de navegadores no se
+   toca. */
+.is-safari .image-modal,
+.is-safari .image-modal::backdrop {
+  transition: none;
 }
 
 .image-modal-inner {
@@ -1157,34 +1275,47 @@ h3 {
   width: 100%;
   max-height: 78vh;
   border-radius: var(--radius);
-  background: #e4e3df;
+  background: var(--placeholder);
   object-fit: contain;
 }
 
 .image-modal-inner p {
-  color: #f3f1ee;
+  color: var(--on-ink);
   font-size: 0.76rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
+/* Dentro del diálogo, no 42 px por encima: en móvil el botón se salía de
+   la pantalla. 44x44 es el mínimo cómodo con el dedo. */
 .image-modal-close-form {
   position: absolute;
-  top: -42px;
-  right: 0;
+  z-index: 2;
+  top: 12px;
+  right: 12px;
 }
 
 .image-modal-close {
   display: grid;
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   place-items: center;
   border: 1px solid rgba(255, 255, 255, 0.66);
-  border-radius: 0;
-  background: transparent;
+  border-radius: 10px;
+  background: rgba(16, 15, 15, 0.55);
   color: white;
   cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition:
+    background-color 180ms ease,
+    transform 120ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .image-modal-close:hover {
+    background: rgba(16, 15, 15, 0.8);
+  }
 }
 
 .image-modal-close svg {
@@ -1197,6 +1328,10 @@ h3 {
   overflow: hidden;
   border-top: 1px solid var(--line);
   background: var(--ground);
+}
+
+.team-section-tinted {
+  background: var(--surface-2);
 }
 
 .team-heading {
@@ -1221,7 +1356,7 @@ h3 {
   margin: 0;
   overflow: hidden;
   border-radius: var(--radius);
-  background: #e5e2df;
+  background: var(--placeholder);
   box-shadow: var(--shadow-stage);
 }
 
@@ -1301,7 +1436,7 @@ h3 {
   max-height: 66vh;
   overflow: hidden;
   border-radius: var(--radius);
-  background: #e5e2df;
+  background: var(--placeholder);
 }
 
 .team-photo::after {
@@ -1347,7 +1482,7 @@ h3 {
   font-family: "Barlow Condensed", sans-serif;
   font-size: clamp(1.8rem, 2.6vw, 2.5rem);
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--track-l);
   line-height: 1;
   text-transform: uppercase;
 }
@@ -1369,54 +1504,7 @@ h3 {
   .team-member:hover .team-photo img {
     transform: scale(1.025);
   }
-}
-
-.team-portraits {
-  padding-block: clamp(96px, 10vw, 156px) clamp(112px, 12vw, 184px);
-  overflow: clip;
-  border-top: 1px solid var(--line);
-  background: var(--ground);
-}
-
-.team-portraits-intro {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: clamp(24px, 3vw, 48px) 20px;
-  align-items: start;
-}
-
-.team-portraits-intro h2 {
-  grid-column: 1 / 6;
-  max-width: 10ch;
-  font-family: "Barlow Condensed", sans-serif;
-  font-size: clamp(2.75rem, 4.2vw, 4.5rem);
-  font-weight: 600;
-  letter-spacing: -0.035em;
-  line-height: 0.9;
-  text-transform: uppercase;
-}
-
-.team-portraits-intro-copy {
-  grid-column: 8 / 13;
-  display: grid;
-  gap: 30px;
-  max-width: 52ch;
-  padding-top: 6px;
-  color: var(--ink-soft);
-}
-
-.team-portraits-count {
-  width: fit-content;
-  padding-top: 12px;
-  border-top: 1px solid var(--ink);
-  color: var(--ink);
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-}
-
-.team-portrait-grid {
+}.team-portrait-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   align-items: start;
@@ -1468,7 +1556,7 @@ h3 {
   aspect-ratio: 4 / 5;
   overflow: hidden;
   border-radius: var(--radius);
-  background: #e5e2df;
+  background: var(--placeholder);
 }
 
 .team-portrait-media img {
@@ -1493,7 +1581,7 @@ h3 {
   font-family: "Barlow Condensed", sans-serif;
   font-size: clamp(1.55rem, 2vw, 2.2rem);
   font-weight: 600;
-  letter-spacing: -0.03em;
+  letter-spacing: var(--track-m);
   line-height: 0.92;
   text-transform: uppercase;
 }
@@ -1524,7 +1612,7 @@ h3 {
 .contact-section {
   padding-block: clamp(72px, 7vw, 104px);
   border-top: 1px solid var(--line);
-  background: #edf0ed;
+  background: var(--surface-4);
   color: var(--ink);
 }
 
@@ -1551,7 +1639,7 @@ h3 {
   font-family: "Barlow Condensed", sans-serif;
   font-size: clamp(3.4rem, 5.8vw, 5.6rem);
   font-weight: 600;
-  letter-spacing: -0.03em;
+  letter-spacing: var(--track-display);
   line-height: 0.9;
   text-transform: uppercase;
 }
@@ -1609,7 +1697,7 @@ h3 {
 
 @media (hover: hover) and (pointer: fine) {
   .contact-actions a:hover {
-    color: var(--coral);
+    color: var(--coral-deep);
     transform: translateX(7px);
   }
 }
@@ -1621,8 +1709,8 @@ h3 {
   min-height: 520px;
   overflow: hidden;
   border-radius: var(--radius);
-  background: #d8ddd8;
-  box-shadow: 0 30px 80px rgba(47, 55, 49, 0.13);
+  background: var(--placeholder-cool);
+  box-shadow: var(--shadow-stage);
 }
 
 .contact-map iframe {
@@ -1759,7 +1847,7 @@ h3 {
 .footer-columns a,
 .footer-columns span {
   width: fit-content;
-  color: #d6d2cf;
+  color: var(--on-ink-soft);
 }
 
 .footer-columns address > a:first-of-type {
@@ -1813,7 +1901,7 @@ h3 {
   gap: 24px;
   padding-top: 24px;
   border-top: 1px solid rgba(255, 255, 255, 0.22);
-  color: #aaa7a4;
+  color: var(--on-ink-faint);
   font-size: 0.74rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -1835,12 +1923,16 @@ h3 {
   }
 }
 
+/* 560 ms y 22px: lo bastante para notarse al entrar en el viewport, sin
+   llegar a los 680ms/28px originales que dejaban un viewport entero en
+   blanco durante un scroll rápido en móvil. */
 .motion-ready .reveal-block {
   opacity: 0;
-  transform: translate3d(0, 28px, 0);
+  transform: translate3d(0, 22px, 0);
   transition:
-    opacity 680ms var(--ease-out),
-    transform 680ms var(--ease-out);
+    opacity 560ms var(--ease-out),
+    transform 560ms var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
 }
 
 .motion-ready .reveal-block.is-visible {
@@ -1864,14 +1956,14 @@ h3 {
 }
 
 .page-hero h1,
-.blog-index-heading h2,
+
 .post-heading h1 {
   max-width: 12ch;
   margin-top: 22px;
   font-family: "Barlow Condensed", sans-serif;
   font-size: clamp(3.7rem, 6vw, 6rem);
   font-weight: 600;
-  letter-spacing: -0.035em;
+  letter-spacing: var(--track-display);
   line-height: 0.9;
   text-transform: uppercase;
 }
@@ -1940,11 +2032,21 @@ h3 {
   font-size: clamp(1rem, 1.35vw, 1.22rem);
 }
 
+/* Acciones opcionales en el hero de página (p. ej. los teléfonos en
+   /contacto/): sin esto, la única vía de contacto quedaba casi dos
+   viewports de scroll por debajo del titular en móvil. */
+.page-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 32px;
+}
+
 .page-hero-media {
   position: relative;
   min-height: 600px;
   overflow: hidden;
-  background: #deded9;
+  background: var(--placeholder-cool);
 }
 
 .page-hero-media img {
@@ -1979,7 +2081,7 @@ h3 {
   font-family: "Barlow Condensed", sans-serif;
   font-size: clamp(2.2rem, 3.4vw, 3.4rem);
   font-weight: 600;
-  letter-spacing: -0.03em;
+  letter-spacing: var(--track-xl);
   line-height: 0.95;
   text-transform: uppercase;
 }
@@ -2072,25 +2174,7 @@ h3 {
   .principles-list article:hover h3 {
     color: var(--accent-voice, var(--coral-deep));
   }
-}
-
-.team-statement {
-  padding-block: clamp(80px, 10vw, 150px);
-  border-top: 1px solid var(--ink);
-}
-
-.team-statement p {
-  max-width: 25ch;
-  margin-left: auto;
-  font-family: "Barlow Condensed", sans-serif;
-  font-size: clamp(2.8rem, 5.4vw, 5.4rem);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 0.95;
-  text-transform: uppercase;
-}
-
-.urgent-band {
+}.urgent-band {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -2115,35 +2199,49 @@ h3 {
 
 .gallery-section {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 18px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 1.7vw, 28px);
   padding-block: clamp(100px, 11vw, 170px);
 }
 
+.gallery-column {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(42px, 4vw, 68px);
+  min-width: 0;
+}
+
 .gallery-item {
-  grid-column: span 4;
+  margin: 0;
 }
 
-.gallery-item-1,
-.gallery-item-4 {
-  grid-column: span 7;
-}
-
-.gallery-item-2,
-.gallery-item-5 {
-  grid-column: span 5;
-}
-
-.gallery-item img {
+.gallery-image-button {
+  position: relative;
+  display: block;
   width: 100%;
-  height: clamp(300px, 38vw, 560px);
+  padding: 0;
+  overflow: hidden;
+  border: 0;
   border-radius: var(--radius);
-  object-fit: cover;
+  background: var(--surface-3);
+  color: var(--ink);
+  cursor: zoom-in;
+  text-align: left;
 }
 
-.gallery-item-2 img,
-.gallery-item-4 img {
-  height: clamp(380px, 48vw, 700px);
+.gallery-image-button img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  transition: transform 500ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .gallery-image-button:hover img,
+  .gallery-image-button:focus-visible img {
+    transform: scale(1.025);
+  }
 }
 
 .gallery-item figcaption {
@@ -2151,6 +2249,268 @@ h3 {
   color: var(--ink-soft);
   font-size: 0.68rem;
   letter-spacing: 0.09em;
+}
+
+.gallery-modal {
+  width: fit-content;
+  max-width: calc(100vw - 24px);
+}
+
+.gallery-modal,
+.gallery-modal::backdrop {
+  transition-duration: 520ms;
+}
+
+.gallery-modal:focus {
+  outline: 0;
+}
+
+.is-safari .gallery-modal,
+.is-safari .gallery-modal::backdrop {
+  transition: none;
+}
+
+.gallery-modal .image-modal-inner {
+  position: relative;
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+
+.gallery-modal .image-modal-inner::after {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 56px;
+  background: rgba(16, 15, 15, 0.58);
+  content: "";
+  opacity: 1;
+  pointer-events: none;
+  backdrop-filter: blur(12px);
+  transform: translateY(0);
+  transition:
+    opacity 340ms ease 180ms,
+    transform 520ms var(--ease-out) 120ms;
+}
+
+.gallery-modal .image-modal-inner img {
+  display: block;
+  width: auto;
+  max-width: calc(100vw - 24px);
+  height: auto;
+  max-height: calc(100dvh - 48px);
+  border-radius: inherit;
+  background: transparent;
+  object-fit: contain;
+}
+
+.gallery-modal-navigation {
+  position: absolute;
+  z-index: 3;
+  right: 8px;
+  bottom: 0;
+  left: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  opacity: 1;
+  pointer-events: none;
+  transform: translateY(0);
+  transition:
+    opacity 320ms ease 270ms,
+    transform 460ms var(--ease-out) 220ms;
+}
+
+.gallery-modal-nav {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--on-ink);
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    transform 140ms var(--ease-out);
+}
+
+.gallery-modal-nav svg {
+  width: 20px;
+  height: 20px;
+}
+
+.gallery-modal-nav:focus-visible,
+.gallery-modal .image-modal-close:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 2px;
+}
+
+.gallery-modal-nav:focus-visible {
+  outline-offset: -2px;
+}
+
+.gallery-modal-nav:active {
+  transform: scale(0.94);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .gallery-modal-nav:hover {
+    background: rgba(243, 241, 238, 0.14);
+    color: white;
+    transform: translateX(var(--gallery-arrow-shift, 0));
+  }
+
+  .gallery-modal-nav-previous {
+    --gallery-arrow-shift: -2px;
+  }
+
+  .gallery-modal-nav-next {
+    --gallery-arrow-shift: 2px;
+  }
+}
+
+.gallery-modal .image-modal-inner > p[data-gallery-modal-caption] {
+  position: absolute;
+  z-index: 3;
+  right: 56px;
+  bottom: 0;
+  left: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 56px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--on-ink);
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 320ms ease 270ms,
+    transform 460ms var(--ease-out) 220ms;
+}
+
+.gallery-modal .image-modal-close-form {
+  top: 14px;
+  right: 14px;
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 300ms ease 230ms,
+    transform 420ms var(--ease-out) 180ms;
+}
+
+.gallery-modal .image-modal-close {
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 8px;
+  background: rgba(16, 15, 15, 0.72);
+  color: var(--on-ink);
+  backdrop-filter: blur(10px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .gallery-modal .image-modal-close:hover {
+    background: var(--ground);
+    color: var(--ink);
+    transform: rotate(90deg);
+  }
+}
+
+.gallery-modal:not([open]) .image-modal-inner::after,
+.gallery-modal:not([open]) .gallery-modal-navigation,
+.gallery-modal:not([open]) .image-modal-inner > p[data-gallery-modal-caption] {
+  opacity: 0;
+  transform: translateY(12px);
+  transition-delay: 0ms;
+  transition-duration: 180ms;
+}
+
+.gallery-modal:not([open]) .image-modal-close-form {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition-delay: 0ms;
+  transition-duration: 160ms;
+}
+
+@starting-style {
+  .gallery-modal[open] .image-modal-inner::after,
+  .gallery-modal[open] .gallery-modal-navigation,
+  .gallery-modal[open] .image-modal-inner > p[data-gallery-modal-caption] {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  .gallery-modal[open] .image-modal-close-form {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@media (max-width: 1023px) {
+  .gallery-section {
+    display: block;
+    columns: 2;
+    column-gap: clamp(16px, 1.7vw, 28px);
+  }
+
+  .gallery-column {
+    display: contents;
+  }
+
+  .gallery-item {
+    break-inside: avoid;
+    margin-bottom: clamp(42px, 4vw, 68px);
+  }
+}
+
+@media (max-width: 767px) {
+  .gallery-modal .image-modal-inner img {
+    max-width: calc(100vw - 24px);
+    max-height: calc(100svh - 16px);
+  }
+
+  .gallery-modal-navigation {
+    right: 6px;
+    left: 6px;
+    height: 52px;
+  }
+
+  .gallery-modal .image-modal-close {
+    width: 44px;
+    height: 44px;
+  }
+
+  .gallery-modal .image-modal-close-form {
+    top: 8px;
+    right: 8px;
+  }
+
+  .gallery-modal .image-modal-inner > p[data-gallery-modal-caption] {
+    right: 52px;
+    bottom: 0;
+    left: 52px;
+    height: 52px;
+  }
+
+  .gallery-modal .image-modal-inner::after {
+    height: 52px;
+  }
 }
 
 .blog-page {
@@ -2185,13 +2545,16 @@ h3 {
 }
 
 .blog-masthead h1 {
+  /* `z-index` solo actúa sobre elementos posicionados: sin `relative` el
+     recorte fotográfico (absolute) tapaba el final del titular. */
+  position: relative;
   z-index: 1;
   grid-column: 2 / 12;
   margin-top: clamp(18px, 2.4vw, 40px);
   font-family: "Barlow Condensed", sans-serif;
   font-size: clamp(6rem, 13.5vw, 13.5rem);
   font-weight: 600;
-  letter-spacing: -0.06em;
+  letter-spacing: var(--track-mega);
   line-height: 0.68;
   text-transform: uppercase;
 }
@@ -2206,10 +2569,13 @@ h3 {
   letter-spacing: -0.08em;
   line-height: 1;
   text-transform: lowercase;
-  transform: translateX(1.2ch);
+  /* Sangrado con margen, no con `transform`: el transform desplazaba los
+     glifos sin mover la caja y la palabra siguiente se le pegaba encima. */
+  margin-inline-start: 1.2ch;
 }
 
 .blog-masthead-intro {
+  position: relative;
   z-index: 1;
   grid-column: 9 / 13;
   max-width: 38ch;
@@ -2225,7 +2591,7 @@ h3 {
   width: min(18vw, 260px);
   aspect-ratio: 3 / 4;
   overflow: hidden;
-  background: #deded9;
+  background: var(--placeholder-cool);
   clip-path: polygon(12% 0, 100% 0, 100% 86%, 0 100%, 0 13%);
   pointer-events: none;
 }
@@ -2320,12 +2686,13 @@ h3 {
 }
 
 .blog-feature-copy {
+  position: relative;
   z-index: 2;
   grid-column: 7 / 13;
   grid-row: 1;
   align-self: center;
   padding: clamp(34px, 4vw, 56px);
-  background: #edf0ed;
+  background: var(--surface-4);
 }
 
 .blog-card-meta,
@@ -2630,7 +2997,7 @@ h3 {
   width: auto;
   margin: 0;
   padding: 0;
-  color: #292523;
+  color: var(--ink-raised);
   font-size: clamp(1.05rem, 1.22vw, 1.18rem);
   line-height: 1.82;
 }
@@ -2693,7 +3060,7 @@ h3 {
   margin: clamp(50px, 7vw, 90px) 0 clamp(50px, 7vw, 90px) -7vw;
   padding: clamp(34px, 5vw, 62px);
   border: 0;
-  background: #edf0ed;
+  background: var(--surface-4);
   font-family: "Barlow Condensed", sans-serif;
   font-size: clamp(2.2rem, 4vw, 4rem);
   font-weight: 550;
@@ -2810,6 +3177,40 @@ h3 {
   flex-direction: column;
   justify-content: center;
   padding: clamp(60px, 7vw, 110px) clamp(28px, 5vw, 86px);
+}
+
+.service-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 0.74rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.service-breadcrumb a {
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+
+.service-breadcrumb span {
+  color: var(--ink-soft);
+}
+
+.service-breadcrumb [aria-current="page"] {
+  color: var(--ink);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .service-breadcrumb a:hover {
+    text-decoration: underline;
+  }
+}
+
+.service-breadcrumb a:focus-visible {
+  text-decoration: underline;
 }
 
 .service-page-copy > p {
@@ -2937,7 +3338,7 @@ h3 {
   display: block;
   overflow: hidden;
   border-radius: var(--radius);
-  background: #e4e3df;
+  background: var(--placeholder);
 }
 
 .service-detail-gallery-button {
@@ -3059,11 +3460,18 @@ h3 {
 
   .mobile-nav summary {
     display: grid;
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
+    margin-right: -6px;
     cursor: pointer;
     list-style: none;
     place-items: center;
+    border-radius: 10px;
+    transition: background-color 160ms ease;
+  }
+
+  .mobile-nav summary:active {
+    background: var(--surface-3);
   }
 
   .mobile-nav summary::-webkit-details-marker {
@@ -3091,6 +3499,7 @@ h3 {
     transform: translateY(-3.5px) rotate(-45deg);
   }
 
+  /* El panel baja desde la propia cabecera: entra y sale por el mismo sitio. */
   .mobile-nav nav {
     position: absolute;
     top: calc(100% + 1px);
@@ -3100,7 +3509,30 @@ h3 {
     padding: 22px 24px 28px;
     border-bottom: 1px solid var(--line);
     background: var(--ground);
-    box-shadow: 0 24px 48px rgba(42, 35, 33, 0.12);
+    box-shadow: var(--shadow-panel);
+    transform-origin: top center;
+    animation: mobile-nav-in 260ms var(--ease-out) both;
+  }
+
+  .mobile-nav-scrim {
+    position: fixed;
+    z-index: -1;
+    inset: var(--header-height) 0 0;
+    background: rgba(16, 15, 15, 0.32);
+    animation: mobile-nav-scrim-in 260ms var(--ease-out) both;
+  }
+
+  @keyframes mobile-nav-in {
+    from {
+      opacity: 0;
+      transform: translateY(-10px) scaleY(0.97);
+    }
+  }
+
+  @keyframes mobile-nav-scrim-in {
+    from {
+      opacity: 0;
+    }
   }
 
   .mobile-nav nav a {
@@ -3113,12 +3545,22 @@ h3 {
     text-transform: uppercase;
   }
 
+  /* CTA principal en móvil: tratamiento de botón, no de nota al pie.
+     Antes era coral puro a 0.86rem -> 2.78:1, por debajo de AA. */
   .mobile-nav nav .mobile-contact {
-    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 56px;
+    margin-top: 20px;
     border: 0;
-    color: var(--coral);
+    border-radius: 10px;
+    background: var(--ink);
+    color: white;
     font-family: "Bricolage Grotesque Variable", sans-serif;
-    font-size: 0.86rem;
+    font-size: 0.95rem;
+    font-weight: 680;
+    letter-spacing: 0.04em;
   }
 
   .hero-main {
@@ -3214,12 +3656,21 @@ h3 {
     min-height: 500px;
   }
 
+  /* Antes: `min-height: 100dvh` en la copy + 64vw de foto = 1,28 viewports
+     de cabecera antes de cualquier contenido. */
   .page-hero {
     grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .page-hero-copy {
+    min-height: 56svh;
+    padding-block: clamp(40px, 7vw, 72px);
   }
 
   .page-hero-media {
-    min-height: 64vw;
+    min-height: 0;
+    aspect-ratio: 4 / 3;
   }
 
   .post-header figure {
@@ -3228,7 +3679,7 @@ h3 {
   }
 
   .principles-heading,
-  .blog-index-heading,
+
   .clinic-intro {
     grid-template-columns: 1fr;
   }
@@ -3269,14 +3720,6 @@ h3 {
 
   .service-page-media {
     min-height: 58vw;
-  }
-
-  .team-portraits-intro h2 {
-    grid-column: 1 / 6;
-  }
-
-  .team-portraits-intro-copy {
-    grid-column: 7 / 13;
   }
 
   .team-portrait-grid {
@@ -3437,14 +3880,6 @@ h3 {
     bottom: 10%;
     width: 55%;
     height: 38%;
-  }
-
-  .hero-email {
-    right: 12px;
-    bottom: 12px;
-    max-width: calc(100% - 24px);
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .service-rail {
@@ -3668,7 +4103,7 @@ h3 {
   }
 
   .page-hero h1,
-  .blog-index-heading h2,
+
   .post-heading h1 {
     font-size: clamp(3.2rem, 17vw, 4.8rem);
   }
@@ -3696,30 +4131,17 @@ h3 {
   }
 
   .gallery-section {
-    grid-template-columns: 1fr;
+    columns: 1;
   }
 
-  .gallery-item,
-  .gallery-item-1,
-  .gallery-item-2,
-  .gallery-item-4,
-  .gallery-item-5 {
-    grid-column: auto;
+  .gallery-item {
+    margin-bottom: 46px;
   }
 
-  .gallery-item img,
-  .gallery-item-2 img,
-  .gallery-item-4 img {
-    height: 72vw;
-    min-height: 310px;
-  }
-
-  .blog-card,
-  .blog-card-featured {
+  .blog-card {
     grid-column: 1 / -1;
   }
 
-  .blog-card-media,
   .blog-card:not(.blog-card-featured) .blog-card-media {
     height: 72vw;
     min-height: 320px;
@@ -3751,24 +4173,6 @@ h3 {
   .service-page-body {
     grid-template-columns: 1fr;
     padding-block: 92px;
-  }
-
-  .team-portraits {
-    padding-block: 92px 120px;
-  }
-
-  .team-portraits-intro {
-    display: block;
-  }
-
-  .team-portraits-intro h2 {
-    font-size: clamp(2.8rem, 14vw, 4rem);
-  }
-
-  .team-portraits-intro-copy {
-    gap: 24px;
-    margin-top: 30px;
-    padding-top: 0;
   }
 
   .team-portrait-grid {
@@ -4000,21 +4404,94 @@ h3 {
     scroll-behavior: auto !important;
   }
 
+  /* Regla general: se elimina el desplazamiento, se conserva la opacidad.
+     La información y las acciones siguen visibles y con feedback. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 160ms !important;
+  }
+
   .orbit-photo,
   .acrylic,
   .orbit-lines,
   .motion-ready .reveal-block,
-  .motion-ready .reveal-block.is-visible {
-    transform: none !important;
-    transition-duration: 160ms !important;
-  }
-
+  .motion-ready .reveal-block.is-visible,
+  .team-photo img,
+  .team-portrait-media img,
+  .blog-feature-media img,
+  .blog-feed-media img,
+  .post-hero-media img,
+  .gallery-image-button img,
   .principle-index,
-  .principles-list h3 {
-    transition-duration: 0.01ms !important;
+  .image-modal,
+  .image-modal:not([open]) {
+    transform: none !important;
   }
 
-  .principles-list article:hover .principle-index {
+  .motion-ready .reveal-block {
+    transition-delay: 0ms !important;
+  }
+
+  .service-row:hover,
+  .contact-actions a:hover,
+  .principles-list article:hover .principle-index,
+  .team-member:hover .team-photo img,
+  .team-portrait:hover .team-portrait-media img,
+  .gallery-image-button:hover img,
+  .story-cta:hover svg,
+  .team-cta:hover svg {
     transform: none;
+  }
+}
+
+/* Transparencia reducida: los materiales se vuelven sólidos y pierden el
+   desenfoque, pero conservan su jerarquía por color. */
+@media (prefers-reduced-transparency: reduce) {
+  .site-header,
+
+  .map-address,
+
+  .team-featured-badge {
+    background: var(--ground);
+    backdrop-filter: none;
+  }
+
+  .image-modal-close {
+    background: var(--ink);
+    backdrop-filter: none;
+  }
+
+  .image-modal::backdrop {
+    background: rgb(16 15 15 / 0.96);
+    backdrop-filter: none;
+  }
+}
+
+/* Contraste alto: fondos casi sólidos y bordes definidos. */
+@media (prefers-contrast: more) {
+  :root {
+    --ink-soft: #33302c;
+    --line: rgba(16, 15, 15, 0.42);
+  }
+
+  .site-header,
+  .map-address,
+  .team-featured-badge {
+    background: var(--ground);
+    backdrop-filter: none;
+    border: 1px solid var(--ink);
+  }
+
+  .button-secondary,
+  .header-contact,
+  .team-specialties li {
+    border-color: var(--ink);
+  }
+
+  :focus-visible {
+    outline-width: 4px;
   }
 }

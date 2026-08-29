@@ -1,7 +1,7 @@
 ---
 import type { Service } from "../lib/wordpress";
 
-type ServiceView = Service & { image: string };
+type ServiceView = Service & { image: string; imageSrcSet?: string };
 type Props = {
   items: ServiceView[];
   showHeading?: boolean;
@@ -34,24 +34,33 @@ const initial = items[0];
           class:list={["service-row", { "is-active": index === 0 }]}
           href={`/${service.slug}/`}
           data-service-item
+          data-slug={service.slug}
           data-image={service.image}
+          data-image-srcset={service.imageSrcSet}
           data-title={service.title}
           data-summary={service.summary}
           data-accent={service.accent}
         >
           <div class="service-row-copy">
-            {showHeading ? <h3>{service.title}</h3> : <h2>{service.title}</h2>}
+            {showHeading ? (
+              <h3 transition:name={`service-title-${service.slug}`}>{service.title}</h3>
+            ) : (
+              <h2 transition:name={`service-title-${service.slug}`}>{service.title}</h2>
+            )}
             <p>{service.summary}</p>
           </div>
           <span class="service-link-label">Ver servicio</span>
           <img
             class="service-row-image"
             src={service.image}
+            srcset={service.imageSrcSet}
+            sizes="100vw"
             alt={`Servicio de ${service.title} en Clínica Veterinaria Jara`}
             width="960"
             height="720"
             loading="lazy"
             decoding="async"
+            transition:name={`service-image-${service.slug}`}
           />
         </a>
       ))}
@@ -59,9 +68,32 @@ const initial = items[0];
 
     <figure class="service-preview" data-service-preview data-accent={initial.accent}>
       <div class="service-preview-frame">
+        {/* Dos `<img>` apiladas: la visible tiene `.is-active` y lleva el
+            `transition:name` del servicio actual, para que al hacer clic la
+            imagen viaje hasta el hero de la ficha de servicio. La otra queda
+            lista para recibir la siguiente imagen y cruzar en opacidad. */}
         <img
+          class="service-preview-image is-active"
           src={initial.image}
-          alt={`Servicio de ${initial.title} en Clínica Veterinaria Jara`}
+          srcset={initial.imageSrcSet}
+          sizes="(min-width: 1024px) 46vw, 40vw"
+          alt=""
+          aria-hidden="true"
+          width="960"
+          height="720"
+          loading="lazy"
+          decoding="async"
+          data-service-image
+          data-slug={initial.slug}
+          transition:name={`service-image-${initial.slug}`}
+        />
+        <img
+          class="service-preview-image"
+          src={initial.image}
+          srcset={initial.imageSrcSet}
+          sizes="(min-width: 1024px) 46vw, 40vw"
+          alt=""
+          aria-hidden="true"
           width="960"
           height="720"
           loading="lazy"
@@ -70,7 +102,7 @@ const initial = items[0];
         />
         <div class="preview-acrylic" aria-hidden="true"></div>
       </div>
-      <figcaption aria-live="polite">
+      <figcaption>
         <strong data-service-title>{initial.title}</strong>
         <span data-service-summary>{initial.summary}</span>
       </figcaption>
@@ -84,27 +116,41 @@ const initial = items[0];
   if (serviceExplorer) {
     const rows = [...serviceExplorer.querySelectorAll<HTMLElement>("[data-service-item]")];
     const preview = serviceExplorer.querySelector<HTMLElement>("[data-service-preview]");
-    const image = serviceExplorer.querySelector<HTMLImageElement>("[data-service-image]");
+    const images = [...serviceExplorer.querySelectorAll<HTMLImageElement>("[data-service-image]")];
     const title = serviceExplorer.querySelector<HTMLElement>("[data-service-title]");
     const summary = serviceExplorer.querySelector<HTMLElement>("[data-service-summary]");
     let active = rows[0];
-    let transitionTimer = 0;
 
     const selectService = (row: HTMLElement) => {
-      if (row === active || !preview || !image || !title || !summary) return;
+      if (row === active || !preview || !title || !summary || images.length < 2) return;
       active = row;
       rows.forEach((item) => item.classList.toggle("is-active", item === row));
-      preview.classList.add("is-changing");
-      window.clearTimeout(transitionTimer);
-      transitionTimer = window.setTimeout(() => {
-        const nextTitle = row.dataset.title ?? "Servicio veterinario";
-        image.src = row.dataset.image ?? image.src;
-        image.alt = `${nextTitle} en Clínica Veterinaria Jara`;
-        title.textContent = nextTitle;
-        summary.textContent = row.dataset.summary ?? "";
-        preview.dataset.accent = row.dataset.accent ?? "lime";
-        requestAnimationFrame(() => preview.classList.remove("is-changing"));
-      }, 110);
+
+      const nextTitle = row.dataset.title ?? "Servicio veterinario";
+      const nextSlug = row.dataset.slug ?? "";
+      const front = images.find((img) => img.classList.contains("is-active")) ?? images[0];
+      const back = images.find((img) => img !== front) ?? images[1];
+
+      back.src = row.dataset.image ?? back.src;
+      back.srcset = row.dataset.imageSrcset ?? "";
+      back.dataset.slug = nextSlug;
+      // El nombre de la vista viaja con la imagen que en cada momento está
+      // activa, no con un elemento fijo: si el visitante recorre varias
+      // filas antes de hacer clic, la transición sigue enlazando con la
+      // ficha de servicio correcta.
+      back.style.viewTransitionName = `service-image-${nextSlug}`;
+      front.style.viewTransitionName = "";
+
+      // El intercambio de capas ocurre en el siguiente fotograma para que el
+      // navegador registre el `src` nuevo antes de cruzar la opacidad.
+      requestAnimationFrame(() => {
+        back.classList.add("is-active");
+        front.classList.remove("is-active");
+      });
+
+      title.textContent = nextTitle;
+      summary.textContent = row.dataset.summary ?? "";
+      preview.dataset.accent = row.dataset.accent ?? "lime";
     };
 
     rows.forEach((row) => {

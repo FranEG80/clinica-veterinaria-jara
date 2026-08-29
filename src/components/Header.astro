@@ -1,10 +1,15 @@
 ---
 const { currentPath = "/" } = Astro.props;
 
+// "Peluquería Especializada" es un hijo de Servicios, no un destino de
+// primer nivel: vivía aquí con el mismo peso que Contacto y en móvil era
+// visualmente el elemento más dominante del menú. Sigue siendo accesible
+// desde /nuestros-servicios/ y desde el footer.
 const links = [
+  { href: "/", label: "Inicio" },
   { href: "/sobre-nosotros/", label: "Clínica" },
   { href: "/nuestros-servicios/", label: "Servicios" },
-  { href: "/servicios/peluqueria-especializada/", label: "Peluquería Especializada" },
+  { href: "/galeria-de-mascotas/", label: "Galería" },
   { href: "/blog/", label: "Blog" },
   { href: "/contacto/", label: "Contacto" },
 ];
@@ -34,14 +39,80 @@ const links = [
     <span class="tabular">957 120 563</span>
   </a>
 
-  <details class="mobile-nav">
+  <details class="mobile-nav" data-mobile-nav>
     <summary>
       <span class="menu-lines" aria-hidden="true"><i></i><i></i></span>
       <span class="sr-only">Abrir menú</span>
     </summary>
+    <div class="mobile-nav-scrim" data-mobile-nav-scrim aria-hidden="true"></div>
     <nav aria-label="Navegación móvil">
       {links.map((link) => <a href={link.href}>{link.label}</a>)}
       <a class="mobile-contact" href="tel:+34957120563">Pedir cita · 957 120 563</a>
     </nav>
   </details>
 </header>
+
+<script>
+  // <details> ya da el comportamiento base sin JS (abre/cierra al tocar el
+  // resumen). Esto añade lo que el elemento nativo no cubre: cerrar con
+  // Escape, al tocar fuera, al navegar, y bloquear el scroll de fondo
+  // mientras el panel está abierto.
+  type HeaderWindow = Window & {
+    __jaraHeaderCleanup?: () => void;
+  };
+
+  const headerWindow = window as HeaderWindow;
+  headerWindow.__jaraHeaderCleanup?.();
+
+  const controller = new AbortController();
+  headerWindow.__jaraHeaderCleanup = () => {
+    controller.abort();
+    document.body.style.overflow = "";
+  };
+
+  const mobileNav = document.querySelector<HTMLDetailsElement>("[data-mobile-nav]");
+
+  if (mobileNav) {
+    const scrim = mobileNav.querySelector<HTMLElement>("[data-mobile-nav-scrim]");
+
+    const close = () => {
+      mobileNav.open = false;
+    };
+
+    mobileNav.addEventListener(
+      "toggle",
+      () => {
+        document.body.style.overflow = mobileNav.open ? "hidden" : "";
+      },
+      { signal: controller.signal },
+    );
+
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key === "Escape" && mobileNav.open) close();
+      },
+      { signal: controller.signal },
+    );
+
+    document.addEventListener(
+      "pointerdown",
+      (event) => {
+        if (mobileNav.open && !mobileNav.contains(event.target as Node)) close();
+      },
+      { signal: controller.signal },
+    );
+
+    scrim?.addEventListener("click", close, { signal: controller.signal });
+
+    mobileNav.querySelectorAll("nav a").forEach((link) => {
+      link.addEventListener("click", close, { signal: controller.signal });
+    });
+
+    document.addEventListener(
+      "astro:before-preparation",
+      close,
+      { signal: controller.signal },
+    );
+  }
+</script>

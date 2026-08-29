@@ -2,24 +2,61 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
 import ContactSection from "../components/ContactSection.astro";
-import { fallbackMedia, getClinicContent, mediaUrl } from "../lib/wordpress";
+import { fallbackMedia, getClinicContent, mediaSrcSet, mediaUrl } from "../lib/wordpress";
 
 const content = await getClinicContent();
 const gallery = content.media
   .filter((item) => /^home_vet_gallery\d*$/.test(item.slug))
   .sort((a, b) => a.id - b.id)
-  .map((item) => ({
+  .map((item, index) => ({
     src: item.source_url,
-    alt: item.alt_text || "Mascota de una familia de Clínica Veterinaria Jara",
+    srcSet: mediaSrcSet(item),
+    alt: item.alt_text || `Mascota de una familia de Clínica Veterinaria Jara, foto ${index + 1}`,
+    width: item.media_details?.width ?? 1200,
+    height: item.media_details?.height ?? 900,
   }));
 
 const images = gallery.length
   ? gallery
   : [
-      { src: fallbackMedia.hero, alt: "Paciente de Clínica Veterinaria Jara" },
-      { src: fallbackMedia.consulta, alt: "Consulta veterinaria" },
-      { src: fallbackMedia["sala-de-espera"], alt: "Sala de espera de la clínica" },
+      {
+        src: fallbackMedia.hero,
+        srcSet: undefined,
+        alt: "Paciente de Clínica Veterinaria Jara",
+        width: 1200,
+        height: 900,
+      },
+      {
+        src: fallbackMedia.consulta,
+        srcSet: undefined,
+        alt: "Consulta veterinaria",
+        width: 1200,
+        height: 900,
+      },
+      {
+        src: fallbackMedia["sala-de-espera"],
+        srcSet: undefined,
+        alt: "Sala de espera de la clínica",
+        width: 1200,
+        height: 900,
+      },
     ];
+
+const featuredGallerySource =
+  "https://veterinariajara.es/wp-content/uploads/2014/10/home_vet_gallery.jpg";
+const featuredIndex = Math.max(
+  images.findIndex((item) => item.src === featuredGallerySource),
+  0,
+);
+const featuredEntry = { item: images[featuredIndex], index: featuredIndex };
+const otherImages = images
+  .map((item, index) => ({ item, index }))
+  .filter(({ index }) => index !== featuredIndex);
+const galleryColumns = [
+  otherImages.filter((_, index) => index % 3 === 0),
+  [featuredEntry, ...otherImages.filter((_, index) => index % 3 === 2)],
+  otherImages.filter((_, index) => index % 3 === 1),
+];
 const heroImage = images[0]?.src ?? mediaUrl(content, "clinica-veterinaria-jara-quienes-somos", "hero");
 ---
 
@@ -38,19 +75,208 @@ const heroImage = images[0]?.src ?? mediaUrl(content, "clinica-veterinaria-jara-
   />
 
   <section class="gallery-section section-shell" aria-label="Galería de mascotas">
-    {images.map((item, index) => (
-      <figure class:list={["gallery-item", `gallery-item-${(index % 5) + 1}`]}>
-        <img
-          src={item.src}
-          alt={item.alt}
-          width="800"
-          height="600"
-          loading={index < 3 ? "eager" : "lazy"}
-          decoding="async"
-        />
-        <figcaption class="tabular">JARA · {String(index + 1).padStart(2, "0")}</figcaption>
-      </figure>
+    {galleryColumns.map((column, columnIndex) => (
+      <div class:list={["gallery-column", `gallery-column-${columnIndex + 1}`]}>
+        {column.map(({ item, index }) => (
+          <figure class:list={["gallery-item", "reveal-block", item.height > item.width ? "gallery-item-portrait" : "gallery-item-landscape"]}>
+            <button
+              class="gallery-image-button"
+              type="button"
+              data-gallery-lightbox-source={item.src}
+              data-gallery-lightbox-alt={item.alt}
+              data-gallery-lightbox-caption={`Jara - ${String(index + 1).padStart(2, "0")}`}
+              aria-label={`Ampliar imagen ${index + 1} de la galería`}
+            >
+              <img
+                src={item.src}
+                srcset={item.srcSet}
+                sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                alt={item.alt}
+                width={item.width}
+                height={item.height}
+                loading={index < 3 ? "eager" : "lazy"}
+                decoding="async"
+              />
+            </button>
+            <figcaption class="tabular">JARA · {String(index + 1).padStart(2, "0")}</figcaption>
+          </figure>
+        ))}
+      </div>
     ))}
   </section>
+  <dialog class="image-modal gallery-modal" data-gallery-modal aria-labelledby="gallery-modal-title" tabindex="-1">
+    <form method="dialog" class="image-modal-close-form">
+      <button class="image-modal-close" type="submit" aria-label="Cerrar imagen">
+        <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+          <path d="m4 4 12 12M16 4 4 16" fill="none" stroke="currentColor" stroke-width="1.5" />
+        </svg>
+      </button>
+    </form>
+    <div class="image-modal-inner">
+      <p id="gallery-modal-title" class="sr-only">Imagen ampliada de la galería</p>
+      <nav class="gallery-modal-navigation" aria-label="Navegación de la galería">
+        <button
+          class="gallery-modal-nav gallery-modal-nav-previous"
+          type="button"
+          data-gallery-previous
+          aria-label="Foto anterior"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M20 12H5m6-6-6 6 6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" />
+          </svg>
+        </button>
+        <button
+          class="gallery-modal-nav gallery-modal-nav-next"
+          type="button"
+          data-gallery-next
+          aria-label="Foto siguiente"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M4 12h15m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" />
+          </svg>
+        </button>
+      </nav>
+      <img data-gallery-modal-image src={heroImage} alt="" />
+      <p data-gallery-modal-caption aria-live="polite"></p>
+    </div>
+  </dialog>
   <ContactSection />
 </BaseLayout>
+
+<script>
+  const galleryModal = document.querySelector<HTMLDialogElement>("[data-gallery-modal]");
+  const galleryModalImage = galleryModal?.querySelector<HTMLImageElement>("[data-gallery-modal-image]");
+  const galleryModalCaption = galleryModal?.querySelector<HTMLElement>("[data-gallery-modal-caption]");
+  const previousButton = galleryModal?.querySelector<HTMLButtonElement>("[data-gallery-previous]");
+  const nextButton = galleryModal?.querySelector<HTMLButtonElement>("[data-gallery-next]");
+  const galleryTriggers = [
+    ...document.querySelectorAll<HTMLButtonElement>("[data-gallery-lightbox-source]"),
+  ];
+
+  if (galleryModal && galleryModalImage && galleryModalCaption) {
+    const galleryModalDefaultSrc = galleryModalImage.src;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    // Un único nombre compartido: en cada momento lo lleva la miniatura
+    // pinchada o la imagen del modal, nunca las dos a la vez. El navegador
+    // interpola tamaño y posición entre quien lo tenía antes y quien lo
+    // tiene después — así la miniatura crece hasta ocupar el modal en vez
+    // de que el modal aparezca aparte.
+    const MORPH_NAME = "gallery-lightbox";
+    let activeThumb: HTMLImageElement | null = null;
+    let activeIndex = -1;
+
+    // Safari parpadea con el morph vía View Transition sobre `<dialog>`;
+    // `is-safari` la pone `BaseLayout.astro` en `<html>` (misma detección
+    // que ya apaga la animación CSS del modal solo para Safari).
+    const isSafari = document.documentElement.classList.contains("is-safari");
+    const canMorph = () =>
+      typeof document.startViewTransition === "function" && !reduceMotion.matches && !isSafari;
+    const supportsNativeDialog = typeof galleryModal.showModal === "function";
+
+    const openModal = () => {
+      if (supportsNativeDialog) galleryModal.showModal();
+      else galleryModal.setAttribute("open", "");
+      galleryModal.focus({ preventScroll: true });
+    };
+
+    const closeModal = () => {
+      if (supportsNativeDialog) {
+        if (galleryModal.open) galleryModal.close();
+      } else {
+        galleryModal.removeAttribute("open");
+      }
+    };
+
+    const fillModal = (trigger: HTMLButtonElement) => {
+      galleryModalImage.src = trigger.dataset.galleryLightboxSource ?? "";
+      galleryModalImage.alt = trigger.dataset.galleryLightboxAlt ?? "Imagen ampliada de la galería";
+      galleryModalCaption.textContent = trigger.dataset.galleryLightboxCaption ?? "Galería de mascotas";
+    };
+
+    const navigateGallery = (direction: -1 | 1) => {
+      if (!galleryTriggers.length) return;
+      activeIndex = (activeIndex + direction + galleryTriggers.length) % galleryTriggers.length;
+      const trigger = galleryTriggers[activeIndex];
+      activeThumb = trigger.querySelector<HTMLImageElement>("img");
+      fillModal(trigger);
+    };
+
+    const openGalleryImage = (trigger: HTMLButtonElement) => {
+      const thumb = trigger.querySelector<HTMLImageElement>("img");
+      activeIndex = galleryTriggers.indexOf(trigger);
+
+      if (!thumb || !canMorph()) {
+        activeThumb = null;
+        fillModal(trigger);
+        openModal();
+        return;
+      }
+
+      activeThumb = thumb;
+      thumb.style.viewTransitionName = MORPH_NAME;
+      document.startViewTransition(() => {
+        thumb.style.viewTransitionName = "";
+        fillModal(trigger);
+        galleryModalImage.style.viewTransitionName = MORPH_NAME;
+        openModal();
+      });
+    };
+
+    const closeGalleryImage = () => {
+      if (!activeThumb || !canMorph() || !galleryModal.open) {
+        closeModal();
+        return;
+      }
+
+      const thumb = activeThumb;
+      galleryModalImage.style.viewTransitionName = MORPH_NAME;
+      document.startViewTransition(() => {
+        galleryModalImage.style.viewTransitionName = "";
+        closeModal();
+        thumb.style.viewTransitionName = MORPH_NAME;
+      }).finished.finally(() => {
+        thumb.style.viewTransitionName = "";
+      });
+    };
+
+    galleryTriggers.forEach((trigger) => {
+      trigger.addEventListener("click", () => openGalleryImage(trigger));
+    });
+
+    previousButton?.addEventListener("click", () => navigateGallery(-1));
+    nextButton?.addEventListener("click", () => navigateGallery(1));
+
+    galleryModal.addEventListener("keydown", (event) => {
+      // Los diálogos nativos se cierran solos con Escape y no deben recibir
+      // un segundo cierre. En el fallback (solo `open`), esta tecla no tiene
+      // comportamiento del navegador, así que la cerramos explícitamente.
+      if (event.key === "Escape" && !supportsNativeDialog) {
+        event.preventDefault();
+        closeGalleryImage();
+        return;
+      }
+
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        navigateGallery(-1);
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        navigateGallery(1);
+      }
+    });
+
+    galleryModal.addEventListener("click", (event) => {
+      if (event.target === galleryModal) closeGalleryImage();
+    });
+
+    galleryModal.querySelector("form")?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      closeGalleryImage();
+    });
+
+    galleryModal.addEventListener("close", () => {
+      galleryModalImage.src = galleryModalDefaultSrc;
+    });
+  }
+</script>

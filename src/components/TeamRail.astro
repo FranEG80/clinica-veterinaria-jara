@@ -4,11 +4,13 @@ type TeamMember = {
   role: string;
   specialty: string;
   image: string;
+  imageSrcSet?: string;
 };
 
 type Props = {
   members: TeamMember[];
   featuredImage?: string;
+  featuredImageSrcSet?: string;
   featuredImageAlt?: string;
   ctaHref?: string;
   ctaLabel?: string;
@@ -17,6 +19,7 @@ type Props = {
 const {
   members,
   featuredImage,
+  featuredImageSrcSet,
   featuredImageAlt = "Equipo de Clínica Veterinaria Jara",
   ctaHref,
   ctaLabel = "Conócenos",
@@ -69,6 +72,8 @@ const assistantCount = members.length - vetCount;
       <figure class="team-heading-featured">
         <img
           src={featuredImage}
+          srcset={featuredImageSrcSet}
+          sizes="(min-width: 1024px) 40vw, 100vw"
           alt={featuredImageAlt}
           width="1200"
           height="800"
@@ -92,6 +97,8 @@ const assistantCount = members.length - vetCount;
           <div class="team-photo">
             <img
               src={member.image}
+              srcset={member.imageSrcSet}
+              sizes="(min-width: 1024px) 31vw, 82vw"
               alt={member.name}
               width="1200"
               height="1800"
