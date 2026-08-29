@@ -136,6 +136,17 @@ const socialImage = new URL(image, deployOrigin);
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
 
+  // Safari (de escritorio y iOS) parpadea al abrir/cerrar el `<dialog>` de
+  // las imágenes: su soporte de `@starting-style`/`allow-discrete` sobre
+  // `dialog`/`::backdrop`, combinado con la View Transition del morph de la
+  // galería, no es tan maduro como en Chrome. Se detecta una sola vez aquí
+  // (no por función) y el resto del CSS/JS lo consulta vía esta clase.
+  // Excluye Chrome, Chromium-based y Firefox/Chrome en iOS, que también
+  // incluyen "Safari" en su user agent al ser WebKit por mandato de Apple.
+  if (/^((?!chrome|crios|fxios|android).)*safari/i.test(navigator.userAgent)) {
+    document.documentElement.classList.add("is-safari");
+  }
+
   const hero = document.querySelector<HTMLElement>("[data-orbit-hero]");
   if (hero && !reduceMotion.matches) {
     const LERP = 0.14;

@@ -1254,6 +1254,18 @@ h3 {
   }
 }
 
+/* Safari parpadea al abrir/cerrar: su soporte de `@starting-style` +
+   `allow-discrete` sobre `dialog`/`::backdrop` no es tan maduro como en
+   Chrome, y combinado con la View Transition del morph de la galería
+   provoca el parpadeo. Se desactiva solo aquí (clase `is-safari` puesta en
+   `<html>` desde `BaseLayout.astro`): abre y cierra sin transición, en vez
+   de con una transición que falla a medias. El resto de navegadores no se
+   toca. */
+.is-safari .image-modal,
+.is-safari .image-modal::backdrop {
+  transition: none;
+}
+
 .image-modal-inner {
   display: grid;
   gap: 12px;
@@ -2259,7 +2271,7 @@ h3 {
 
 .gallery-modal {
   width: fit-content;
-  max-width: min(1180px, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
 }
 
 .gallery-modal .image-modal-inner {

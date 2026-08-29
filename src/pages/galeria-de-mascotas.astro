@@ -121,8 +121,12 @@ const heroImage = images[0]?.src ?? mediaUrl(content, "clinica-veterinaria-jara-
     const MORPH_NAME = "gallery-lightbox";
     let activeThumb: HTMLImageElement | null = null;
 
+    // Safari parpadea con el morph vía View Transition sobre `<dialog>`;
+    // `is-safari` la pone `BaseLayout.astro` en `<html>` (misma detección
+    // que ya apaga la animación CSS del modal solo para Safari).
+    const isSafari = document.documentElement.classList.contains("is-safari");
     const canMorph = () =>
-      typeof document.startViewTransition === "function" && !reduceMotion.matches;
+      typeof document.startViewTransition === "function" && !reduceMotion.matches && !isSafari;
 
     const fillModal = (trigger: HTMLButtonElement) => {
       galleryModalImage.src = trigger.dataset.galleryLightboxSource ?? "";
