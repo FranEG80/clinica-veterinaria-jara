@@ -79,8 +79,8 @@ const socialImage = new URL(image, Astro.url);
     <meta name="twitter:image" content={socialImage} />
     <title>{title}</title>
   </head>
-  <script define:vars={{ socialImage }}>
-    console.log({ socialImage });
+  <script define:vars={{ socialImage, url: Astro.url, astro: Astro }}>
+    console.log({ url, astro});
   </script>
   <body>
     <!--
