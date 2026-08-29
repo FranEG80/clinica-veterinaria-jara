@@ -136,6 +136,22 @@ const socialImage = new URL(image, deployOrigin);
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
 
+  type LayoutWindow = Window & {
+    __jaraLayoutCleanup?: () => void;
+  };
+
+  const layoutWindow = window as LayoutWindow;
+  layoutWindow.__jaraLayoutCleanup?.();
+  const controller = new AbortController();
+  let revealObserver: IntersectionObserver | undefined;
+  let raf = 0;
+
+  layoutWindow.__jaraLayoutCleanup = () => {
+    controller.abort();
+    revealObserver?.disconnect();
+    if (raf) cancelAnimationFrame(raf);
+  };
+
   // Safari (de escritorio y iOS) parpadea al abrir/cerrar el `<dialog>` de
   // las imágenes: su soporte de `@starting-style`/`allow-discrete` sobre
   // `dialog`/`::backdrop`, combinado con la View Transition del morph de la
@@ -157,8 +173,6 @@ const socialImage = new URL(image, deployOrigin);
     let currentX = 0;
     let currentY = 0;
     let currentScroll = 0;
-    let raf = 0;
-
     // El suavizado vive aquí (lerp por fotograma), no en una `transition`
     // CSS: así cada capa sigue al puntero 1:1 sin quedarse medio segundo
     // por detrás, y el gesto se puede redirigir en cualquier instante.
@@ -189,18 +203,26 @@ const socialImage = new URL(image, deployOrigin);
     };
 
     if (finePointer.matches) {
-      hero.addEventListener("pointermove", (event) => {
-        const bounds = hero.getBoundingClientRect();
-        targetX = (event.clientX - bounds.left) / bounds.width - 0.5;
-        targetY = (event.clientY - bounds.top) / bounds.height - 0.5;
-        ensureLoop();
-      });
+      hero.addEventListener(
+        "pointermove",
+        (event) => {
+          const bounds = hero.getBoundingClientRect();
+          targetX = (event.clientX - bounds.left) / bounds.width - 0.5;
+          targetY = (event.clientY - bounds.top) / bounds.height - 0.5;
+          ensureLoop();
+        },
+        { signal: controller.signal },
+      );
 
-      hero.addEventListener("pointerleave", () => {
-        targetX = 0;
-        targetY = 0;
-        ensureLoop();
-      });
+      hero.addEventListener(
+        "pointerleave",
+        () => {
+          targetX = 0;
+          targetY = 0;
+          ensureLoop();
+        },
+        { signal: controller.signal },
+      );
     }
 
     window.addEventListener(
@@ -209,14 +231,14 @@ const socialImage = new URL(image, deployOrigin);
         targetScroll = Math.min(1, Math.max(0, window.scrollY / window.innerHeight));
         ensureLoop();
       },
-      { passive: true },
+      { passive: true, signal: controller.signal },
     );
   }
 
   const revealBlocks = [...document.querySelectorAll<HTMLElement>(".reveal-block")];
   if (revealBlocks.length && !reduceMotion.matches && "IntersectionObserver" in window) {
     document.documentElement.classList.add("motion-ready");
-    const observer = new IntersectionObserver(
+    revealObserver = new IntersectionObserver(
       (entries) => {
         // Los bloques que entran en el mismo fotograma se escalonan ~60ms
         // entre sí, en vez de aparecer todos a la vez. Si el propio bloque ya
@@ -232,12 +254,12 @@ const socialImage = new URL(image, deployOrigin);
               target.style.setProperty("--reveal-delay", `${index * 60}ms`);
             }
             target.classList.add("is-visible");
-            observer.unobserve(target);
+            revealObserver?.unobserve(target);
           });
       },
       { rootMargin: "0px 0px -10% 0px", threshold: 0.12 },
     );
-    revealBlocks.forEach((block) => observer.observe(block));
+    revealBlocks.forEach((block) => revealObserver?.observe(block));
   }
 
   // La entrada a una ficha de servicio (lista -> detalle) viaja bien: el
@@ -253,15 +275,11 @@ const socialImage = new URL(image, deployOrigin);
   // `preventDefault()`, y Astro cae entonces a una navegación normal del
   // navegador para esa página: sin transición, sin salto acompañado de
   // animación, el comportamiento de toda la vida al pulsar "atrás".
-  const globalFlags = window as unknown as Record<string, boolean>;
-  if (!globalFlags.__jaraServiceTransitionHooked) {
-    globalFlags.__jaraServiceTransitionHooked = true;
-
-    document.addEventListener(
-      "astro:before-preparation",
-      (event: TransitionBeforePreparationEvent) => {
-        if (document.querySelector(".service-page-hero")) event.preventDefault();
-      },
-    );
-  }
+  document.addEventListener(
+    "astro:before-preparation",
+    (event: TransitionBeforePreparationEvent) => {
+      if (document.querySelector(".service-page-hero")) event.preventDefault();
+    },
+    { signal: controller.signal },
+  );
 </script>

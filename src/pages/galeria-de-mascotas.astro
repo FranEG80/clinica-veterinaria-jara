@@ -171,6 +171,21 @@ const heroImage = images[0]?.src ?? mediaUrl(content, "clinica-veterinaria-jara-
     const isSafari = document.documentElement.classList.contains("is-safari");
     const canMorph = () =>
       typeof document.startViewTransition === "function" && !reduceMotion.matches && !isSafari;
+    const supportsNativeDialog = typeof galleryModal.showModal === "function";
+
+    const openModal = () => {
+      if (supportsNativeDialog) galleryModal.showModal();
+      else galleryModal.setAttribute("open", "");
+      galleryModal.focus({ preventScroll: true });
+    };
+
+    const closeModal = () => {
+      if (supportsNativeDialog) {
+        if (galleryModal.open) galleryModal.close();
+      } else {
+        galleryModal.removeAttribute("open");
+      }
+    };
 
     const fillModal = (trigger: HTMLButtonElement) => {
       galleryModalImage.src = trigger.dataset.galleryLightboxSource ?? "";
@@ -189,16 +204,11 @@ const heroImage = images[0]?.src ?? mediaUrl(content, "clinica-veterinaria-jara-
     const openGalleryImage = (trigger: HTMLButtonElement) => {
       const thumb = trigger.querySelector<HTMLImageElement>("img");
       activeIndex = galleryTriggers.indexOf(trigger);
-      const show = () => {
-        if (typeof galleryModal.showModal === "function") galleryModal.showModal();
-        else galleryModal.setAttribute("open", "");
-        galleryModal.focus({ preventScroll: true });
-      };
 
       if (!thumb || !canMorph()) {
         activeThumb = null;
         fillModal(trigger);
-        show();
+        openModal();
         return;
       }
 
@@ -208,13 +218,13 @@ const heroImage = images[0]?.src ?? mediaUrl(content, "clinica-veterinaria-jara-
         thumb.style.viewTransitionName = "";
         fillModal(trigger);
         galleryModalImage.style.viewTransitionName = MORPH_NAME;
-        show();
+        openModal();
       });
     };
 
     const closeGalleryImage = () => {
       if (!activeThumb || !canMorph() || !galleryModal.open) {
-        galleryModal.close();
+        closeModal();
         return;
       }
 
@@ -222,7 +232,7 @@ const heroImage = images[0]?.src ?? mediaUrl(content, "clinica-veterinaria-jara-
       galleryModalImage.style.viewTransitionName = MORPH_NAME;
       document.startViewTransition(() => {
         galleryModalImage.style.viewTransitionName = "";
-        galleryModal.close();
+        closeModal();
         thumb.style.viewTransitionName = MORPH_NAME;
       }).finished.finally(() => {
         thumb.style.viewTransitionName = "";

@@ -57,6 +57,19 @@ const links = [
   // resumen). Esto añade lo que el elemento nativo no cubre: cerrar con
   // Escape, al tocar fuera, al navegar, y bloquear el scroll de fondo
   // mientras el panel está abierto.
+  type HeaderWindow = Window & {
+    __jaraHeaderCleanup?: () => void;
+  };
+
+  const headerWindow = window as HeaderWindow;
+  headerWindow.__jaraHeaderCleanup?.();
+
+  const controller = new AbortController();
+  headerWindow.__jaraHeaderCleanup = () => {
+    controller.abort();
+    document.body.style.overflow = "";
+  };
+
   const mobileNav = document.querySelector<HTMLDetailsElement>("[data-mobile-nav]");
 
   if (mobileNav) {
@@ -66,22 +79,40 @@ const links = [
       mobileNav.open = false;
     };
 
-    mobileNav.addEventListener("toggle", () => {
-      document.body.style.overflow = mobileNav.open ? "hidden" : "";
-    });
+    mobileNav.addEventListener(
+      "toggle",
+      () => {
+        document.body.style.overflow = mobileNav.open ? "hidden" : "";
+      },
+      { signal: controller.signal },
+    );
 
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && mobileNav.open) close();
-    });
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key === "Escape" && mobileNav.open) close();
+      },
+      { signal: controller.signal },
+    );
 
-    document.addEventListener("pointerdown", (event) => {
-      if (mobileNav.open && !mobileNav.contains(event.target as Node)) close();
-    });
+    document.addEventListener(
+      "pointerdown",
+      (event) => {
+        if (mobileNav.open && !mobileNav.contains(event.target as Node)) close();
+      },
+      { signal: controller.signal },
+    );
 
-    scrim?.addEventListener("click", close);
+    scrim?.addEventListener("click", close, { signal: controller.signal });
 
     mobileNav.querySelectorAll("nav a").forEach((link) => {
-      link.addEventListener("click", close);
+      link.addEventListener("click", close, { signal: controller.signal });
     });
+
+    document.addEventListener(
+      "astro:before-preparation",
+      close,
+      { signal: controller.signal },
+    );
   }
 </script>
